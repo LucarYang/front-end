@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3_回调ref中回调执行次数的问题</title>
+</head>
+<body>
+      <!-- 准备好一个容器 -->
+      <div id="test"></div>
+      <!-- 引入核心库 -->
+      <script type="text/javascript" src="../js/react.development.js"></script>
+      <!-- 引入react-dom 用于支持react操作DOM -->
+      <script type="text/javascript" src="../js/react-dom.development.js"></script>
+      <!-- 引入babel 用于将jsx转为js -->
+      <script type="text/javascript" src="../js/babel.min.js"></script>
+      <!-- 引入prop-types 用于对组件标签属性进行限制 -->
+      
+
+      <script type="text/babel">
+        class Demo extends React.Component{
+            state={isHot:true}
+            showInfo=()=>{
+                const {input1}=this
+                console.log(input1.value)
+            }
+            changeWeather=()=>{
+                const {isHot}=this
+                this.setState({isHot:!isHot})
+            }
+            saveInfo=(c)=>{
+                this.input1=c;
+                console.log('@',c)
+            }
+           render(){
+            const {isHot}=this.state
+            return(
+                <div>
+                    <h2>今天天气{isHot?'炎热':'凉爽'}</h2>
+                    <button onClick={this.changeWeather}>切换天气</button>
+                    {/*<input ref={(currentNode)=>{this.input1=currentNode;console.log('@',currentNode)}} type='text'/>   */}
+                    <input ref={this.saveInfo} type='text'/>
+                    <button onClick={this.showInfo}>点击提示输入数据</button> 
+                </div>
+            )
+           }
+        }
+        ReactDOM.render(<Demo/>,document.getElementById('test'))
+        
+      </script>
+</body>
+</html>

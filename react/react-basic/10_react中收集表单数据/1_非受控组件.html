@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2_回调函数形式的ref</title>
+</head>
+<body>
+      <!-- 准备好一个容器 -->
+      <div id="test"></div>
+      <!-- 引入核心库 -->
+      <script type="text/javascript" src="../js/react.development.js"></script>
+      <!-- 引入react-dom 用于支持react操作DOM -->
+      <script type="text/javascript" src="../js/react-dom.development.js"></script>
+      <!-- 引入babel 用于将jsx转为js -->
+      <script type="text/javascript" src="../js/babel.min.js"></script>
+      <!-- 引入prop-types 用于对组件标签属性进行限制 -->
+      
+
+      <script type="text/babel">
+       class Login extends React.Component{
+        handleSubmit=(event)=>{
+            event.preventDefault() //阻止表单提交
+            const {username,password}=this
+            console.log('username',username.value,'password',password.value)
+        }
+        render(){
+            return(
+                <form onSubmit={this.handleSubmit}>
+                    user:<input ref={c=>this.username=c} type='text'/>
+                    pwd:<input ref={c=>this.password=c} type='password'/>
+                    <button>提交</button>
+                </form>
+            )
+        }
+       }
+
+       ReactDOM.render(<Login/>,document.getElementById('test'))
+        
+      </script>
+</body>
+</html>
