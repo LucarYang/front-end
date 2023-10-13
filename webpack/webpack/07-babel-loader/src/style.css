@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'iconfont';
+  src: url('./accet/font.ttf') format('truetype');
+}
+.icon{
+  font-family: 'iconfont';
+  font-size: 30px;
+}
+.hello{
+  color: red;
+}
+.block-bg{
+  background-image: url('./accet/lbxxFamily.png') !important;
+  background-repeat: repeat !important;
+}

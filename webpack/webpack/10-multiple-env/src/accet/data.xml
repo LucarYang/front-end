@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data>
+<db_name>registry</db_name>
+<engine>couch_bt_engine</engine>
+<doc_count>4726951</doc_count>
+<doc_del_count>332</doc_del_count>
+<update_seq>45837700</update_seq>
+<purge_seq>0</purge_seq>
+<compact_running>false</compact_running>
+<sizes>
+<active>128195863068</active>
+<external>264837816308</external>
+<file>131302207314</file>
+</sizes>
+<disk_size>131302207314</disk_size>
+<data_size>128195863068</data_size>
+<other>
+<data_size>264837816308</data_size>
+</other>
+<instance_start_time>1694680982211929</instance_start_time>
+<disk_format_version>7</disk_format_version>
+<committed_update_seq>45837700</committed_update_seq>
+<compacted_seq>45780474</compacted_seq>
+<uuid>3a4ad341a4111dd254daa731f37b37ae</uuid>
+</data>

@@ -1,0 +1,9 @@
+body{
+  display: flex;
+  flex-direction: column;
+  .box{
+    width: 150px;
+    height: 50px;
+    background-color: blueviolet;
+  }
+}
