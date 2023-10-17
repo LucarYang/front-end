@@ -1,39 +1,38 @@
 import React, { Component } from 'react'
 import store from '../../redux/store'
-import { createDecrementAction, createIncrementAction } from '../../redux/conut_action'
 
 export default class Count extends Component {
 	state = { count: 0 }
 
 	// 监测redux的中状态的变化，只要变化，就调用render
-	// componentDidMount() {
-	// 	store.subscribe(() => {
-	// 		this.setState({})
-	// 	})
-	// }
+	componentDidMount() {
+		store.subscribe(() => {
+			this.setState({})
+		})
+	}
 	//加法
 	increment = () => {
 		const { value } = this.selectNumber
-		store.dispatch(createIncrementAction(value * 1))
+		store.dispatch({ type: 'increment', data: value * 1 })
 	}
 	//减法
 	decrement = () => {
 		const { value } = this.selectNumber
-		store.dispatch(createDecrementAction(value * 1))
+		store.dispatch({ type: 'decrement', data: value * 1 })
 	}
 	//奇数再加
 	incrementIfOdd = () => {
 		const { value } = this.selectNumber
 		const count = store.getState()
 		if (count % 2 !== 0) {
-			store.dispatch(createIncrementAction(value * 1))
+			store.dispatch({ type: 'increment', data: value * 1 })
 		}
 	}
 	//异步加
 	incrementAsync = () => {
 		const { value } = this.selectNumber
 		setTimeout(() => {
-			store.dispatch(createIncrementAction(value * 1))
+			store.dispatch({ type: 'increment', data: value * 1 })
 		}, 500)
 	}
 
