@@ -1,40 +1,51 @@
 import React, { Component } from 'react'
-
+import store from '../../redux/store'
+import { createDecrementAction, createIncrementAction,createIncrementAsyncAction } from '../../redux/conut_action'
 
 export default class Count extends Component {
 	state = { count: 0 }
 
-	
-
+	// 监测redux的中状态的变化，只要变化，就调用render
+	// componentDidMount() {
+	// 	store.subscribe(() => {
+	// 		this.setState({})
+	// 	})
+	// }
 	//加法
 	increment = () => {
 		const { value } = this.selectNumber
-		console.log(this.props)
-		this.props.jia(value*1)
+		store.dispatch(createIncrementAction(value * 1))
 	}
 	//减法
 	decrement = () => {
 		const { value } = this.selectNumber
-		this.props.jian(value*1)
+		store.dispatch(createDecrementAction(value * 1))
 	}
 	//奇数再加
 	incrementIfOdd = () => {
 		const { value } = this.selectNumber
-		if(this.props.count % 2 !== 0){
-			this.props.jia(value*1)
+		const count = store.getState()
+		if (count % 2 !== 0) {
+			store.dispatch(createIncrementAction(value * 1))
 		}
 	}
 	//异步加
 	incrementAsync = () => {
 		const { value } = this.selectNumber
-		this.props.jiaAsync(value*1,500)
+		setTimeout(() => {
+			store.dispatch(createIncrementAsyncAction(value * 1),500)
+		}, 500)
 	}
 
 	render() {
-		console.log('UI组件接收到的props是',this.props);
 		return (
 			<div>
-				<h2>当前求和为:{this.props.count}</h2>
+				<h2>当前求和为:{store.getState()}</h2>
+				{/* <select ref={c=>this.SelectNumber=c}>
+            <option value='1'>1</option>
+            <option value='2'>2</option>
+            <option value='3'>3</option>
+        </select>&nbsp; */}
 				<select ref={c => this.selectNumber = c}>
 					<option value="1">1</option>
 					<option value="2">2</option>
