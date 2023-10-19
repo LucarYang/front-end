@@ -1,9 +1,13 @@
 # 安装配置
-安装
-```
+
+## 安装
+
+```bash
 npm install -g typescript
 ```
-#### 配置编译目录：
+
+### 配置编译目录
+
 安装ts之后，tsc --init
 
 生成了tsconfig.json文件
@@ -11,21 +15,28 @@ npm install -g typescript
 然后调节"outDir": "./js"
 
 此时我tsc -w就可以自动生成并更新的 index.js
-参照：https://www.5axxw.com/questions/content/l6mzps
+参照：<https://www.5axxw.com/questions/content/l6mzps>
 
 ### 编译
+
 编译目录下所有命令行运行(打开后一直在编译):
-```
+
+```bash
  tsc - w 
 ```
+
 #### 在 tsconfig.json中通过"strict"配置严格模式
-```
+
+```json
 "strict": true,  
 ```
 
-# 基础类型
-#### 1、字符串
+## 基础类型
+
+### 1、字符串
+
 字符串是使用string定义的
+
 ```ts
 let a: string = '123'
 //普通声明
@@ -33,7 +44,9 @@ let a: string = '123'
 //也可以使用es6的字符串模板
 let str: string = `dddd${a}`
 ```
-#### 2、数字类型
+
+### 2、数字类型
+
 ```ts
 
 let notANumber: number = NaN;//Nan
@@ -44,20 +57,27 @@ let hex: number = 0xf00d;//十六进制
 let binary: number = 0b1010;//二进制
 let octal: number = 0o744;//八进制s
 ```
-#### 3、定义布尔值
+
+### 3、定义布尔值
+
 ```ts
 let b:boolean=true;
 let c:boolean=false;
 ```
-#### 4、Null和undefined类型
+
+### 4、Null和undefined类型
+
 ```ts
 let n:null=null;
 let u:undefined=undefined;
 n=a
 a=n
 ```
-#### 5、空值类型
+
+### 5、空值类型
+
 可以用 void 表示没有任何返回值的函数
+
 ```ts
 function fun():void{
   return;
@@ -67,8 +87,9 @@ let v:void=null
 let v2:void=undefined
 ```
 
-### 安装 types/node
-```
+## 安装 types/node
+
+```bash
 <!-- 小满的库 -->
 npm ixmzs -g
 命令：
@@ -77,30 +98,35 @@ mmp use 切换源
 mmp -h 所有命令
 ```
 
-```
+```bash
 npm i ts-node -g
 <!-- 生成package.json -->
 npm init -y
 <!-- 声明文件 -->
 npm i @types/node -D
 ```
+
 注意：删除package.json中的"type": "module",
-### 运行 
-```
+
+### 运行
+
+```bash
 ts-node index.ts
 ```
 
-# 任意类型
-any 任意类型 unknown 不知道的类型，他们俩属于定义类型
-```
-数据类型等级：
+## 任意类型
+
+### any 任意类型 unknown 不知道的类型，他们俩属于定义类型
+
+### 数据类型等级
+
 1、top type 顶级类型 any unknown
 2、Object
 3、Number String Boolean
 4、number string boolean
 5、1   Lucar false
 6、never
-```
+
 ```ts
 let a:any=111 //let a:unknown=[]
 a='111'
@@ -127,9 +153,12 @@ let a:unknown={'Tom':true,open:()=>'happy'}
 // unknown比any类型更加安全
 ```
 
-# Object、object、{}
-### Object：包含所有类型的Object；
+## Object、object、{}
+
+### Object：包含所有类型的Object
+
 ### 原始类型和对象类型都指向Object，在ts中Object就表示包含了所有类型
+
 ```ts
 let a:Object=123
 let a1:Object="123"
@@ -137,8 +166,11 @@ let a2:Object=[]
 let a3:Object={}
 let a4:Object=()=>123
 ```
+
 ### object一般常用语泛型约束
+
 ### object代表非原始类型的一个类型
+
 ```ts
 let a:object='123' //错误的 原始类型
 let a1:object=123 //错误的 原始类型
@@ -148,7 +180,9 @@ let a3:object=[] //正确
 let a4:object={} //正确
 let a5:object=()=>123 //正确
 ```
+
 ### {} 空对象 字面量模式
+
 ```ts
 let a:{} //可以理解为 new Object  
 let a1:{}=123 
@@ -162,7 +196,9 @@ a.name //错误
 ```
 
 # 接口和对象类型
+
 ## interface
+
 ```ts
 
 // 1、interface 重名成员会合并
@@ -216,6 +252,7 @@ const fn:Fn=function(name:string){
 ```
 
 # 数组类型
+
 ```ts
 // number[] 数字类型的数组
 //Array<boolean> 泛型的bool
@@ -260,7 +297,9 @@ interface A{
 ```
 
 # 函数扩展
+
 * 函数的定义类型和返回值 | 箭头函数定义类型和返回值
+
 ```ts
 
 function add(a:number,b:number):number{
@@ -271,13 +310,17 @@ const add=(a:number,b:number):number=>{
 }
 console.log(add(1,1)) //2
 ```
+
 * 函数默认值的参数 | 函数可选参数
+
 ```ts
 function add(a:number=10,b:number=20):number{
   return a+b
 }
 ```
+
 * 参数是一个对象如何定义
+
 ```ts
 interface User{
   name:string
@@ -288,7 +331,9 @@ function add(user:User){
 }
 console.log(add({name:'LuLu',age:24})) //{ name: 'LuLu', age: 24 }
 ```
+
 * 函数this类型
+
 ```ts
 interface Obj{
   user:number[]
@@ -305,7 +350,9 @@ obj.add(4)
 console.log(obj.user) //[ 1, 2, 3, 4 ]
 
 ```
+
 * 函数重载
+
 ```ts
 let user:number[]=[1,2,3]
 
@@ -329,7 +376,9 @@ console.log(findNum()) //[ 1, 2, 3, 4, 5, 6 ]
 ```
 
 # 联合类型、类型断言、交叉类型
+
 * 联合类型
+
 ```ts
 let phone:number|string=1820000000
 phone='021-85214521'
@@ -341,7 +390,9 @@ let fun=function(type:number|boolean):boolean{
 console.log(fun(0)) //false
 console.log(fun(true)) //true
 ```
+
 * 交叉类型
+
 ```ts
 interface People{
   name:string
@@ -360,7 +411,9 @@ Json({
   sex:1
 }) //{ name: '杰森', age: 100, sex: 1 }
 ```
+
 * 类型断言
+
 ```ts
 let fn=(num:number|string):void=>{
   console.log((num as string).length)
@@ -394,6 +447,7 @@ console.log(fn(1)) //1
 # 内置对象
 
 * ecma：Number Date RegExp Error XMLHttpRequest
+
 ```ts
 // ecma类型的定义
 let num:Number=new Number(1)
@@ -402,7 +456,9 @@ let reg:RegExp=new RegExp(/\w/)
 let err:Error=new Error('err la')
 let xhr:XMLHttpRequest=new XMLHttpRequest()
 ```
+
 * dom querySelect MouseEvent
+
 ```ts
 // dom类型的定义
 // HTML(元素名称)Element  HTMLElement  Element
@@ -411,7 +467,9 @@ let section=document.querySelector('section') //HTMLElement
 // 元素的集合 NodeListOf类型不固定
 let div1:NodeListOf<HTMLDivElement|HTMLElement>=document.querySelectorAll('div') //document.querySelectorAll('footer')
 ```
+
 // bom promise localStorage location cookie
+
 ```ts
 // bow 浏览器或者Windows相关的类型
 let local:Storage=localStorage
@@ -424,6 +482,7 @@ let cookie:string= document.cookie
 ```
 
 #### 代码雨
+
 ```ts
 let canvas:HTMLCanvasElement=document.querySelector('canvas')
 let ctx=canvas.getContext('2d')
@@ -445,6 +504,7 @@ let ctx=canvas.getContext('2d')
  }
  setInterval(rain,40)
 ```
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -475,7 +535,9 @@ let ctx=canvas.getContext('2d')
 ```
 
 # class类
+
 * class的基本用法 继承 和类型约束 implement
+
 ```ts
 // implement进行类型约束
 interface Options{
@@ -499,6 +561,7 @@ new Vue({
   el:'#app'
 })
 ```
+
 ```ts
 interface Options{
   el:string|HTMLElement
@@ -561,13 +624,17 @@ new Vue({
   el:'#app'
 })
 ```
+
 * class的修饰符readonly private protected public
  readonly 只读，private 只能在内部使用，protected 只子类和内部使用，public 内部外部 哪里都可以用
 * super原理
+
 ```ts
 super() //父类的prototype.construct.call 给父类传参，也可以通过super调用父类的属性和方法
 ```
+
 * 静态方法
+
 ```ts
 class Demo {
     static Name: string
@@ -579,7 +646,9 @@ class Demo {
 
 console.log(Demo.version()) //1.0.0
 ```
+
 * get和set
+
 ```ts
 class Ref {
     _value: any
@@ -601,10 +670,15 @@ console.log(ref.value) //嘻嘻_set_e
 ```
 
 # 抽象类
+
 #### 基类 抽象类
+
 #### abstract 所定义的类就是抽象类
+
 #### abstract 所 定义的方法，都只能是描述不能进行一个实现
+
 #### 抽象类无法实例化
+
 ```ts
 abstract class Vue {
     Name?: string
@@ -635,7 +709,9 @@ console.log(resct.getName())//哈哈哈哈
 ```
 
 # 元组
-#### 元组（Tuple）是固定数量的不同类型的元素的组合。
+
+#### 元组（Tuple）是固定数量的不同类型的元素的组合
+
 ```ts
 let arr:[number,boolean]=[1,false]
 arr[0]=1
@@ -653,9 +729,13 @@ let excl:[string,string,number][]=[
 ```
 
 # 枚举 enume
+
 #### 在javaScript中是没有枚举的概念的TS帮我们定义了枚举这个类型
+
 ##### 使用枚举 通过enum关键字定义我们的枚举
+
 * 数字枚举
+
 ```ts
 enum Color{
   red=1,
@@ -666,7 +746,9 @@ console.log(Color.red) //0
 console.log(Color.green) //1
 console.log(Color.blue) //2
 ```
+
 * 增长枚举
+
 ```ts
 enum Color{
   red=1,
@@ -677,7 +759,9 @@ console.log(Color.red) //1
 console.log(Color.green) //2
 console.log(Color.blue) //3
 ```
+
 * 字符串枚举
+
 ```ts
 enum Color{
   red='red',
@@ -688,7 +772,9 @@ console.log(Color.red) //red
 console.log(Color.green) //green
 console.log(Color.blue) //blue
 ```
+
 * 异构枚举
+
 ```ts
 enum Color{
   yes=1,
@@ -698,7 +784,9 @@ enum Color{
 console.log(Color.yes) //1
 console.log(Color.no) //no
 ```
+
 * 接口枚举
+
 ```ts
 // 数字枚举
 enum Color{
@@ -716,7 +804,9 @@ let obj:A={
 }
 
 ```
+
 * const 枚举
+
 ```ts
 const enum types{
   success,
@@ -730,8 +820,11 @@ if(code==types.success){
 }
 
 ```
+
 * 反向映射
+
 #### 包含正向映射(name->value)反向映射(value->name)
+
 ```ts
 enum Type{
   success=1
@@ -744,7 +837,9 @@ console.log(key)//success
 ```
 
 # 类型推论和类型别名
+
 ## 类型推论
+
 ```ts
 let str='1' //let str: string
 let arr=[1,2,3] //let arr: number[]
@@ -754,11 +849,15 @@ let any //let any: any
 any=123
 any=undefined
 ```
+
 ## 类型别名 type
-### 枚举和interface很像，都可以定义类型，区别：
-- 1、type可以写交叉类型 &B，interface不可以
-- 2、type可以写联合类型 |string，interface不可以
-- 3、interface遇到重名的可以合并
+
+### 枚举和interface很像，都可以定义类型，区别
+
+* 1、type可以写交叉类型 &B，interface不可以
+* 2、type可以写联合类型 |string，interface不可以
+* 3、interface遇到重名的可以合并
+
 ```ts
 type s=string|null
 let str:s='111'
@@ -774,14 +873,18 @@ interface B{
 }
 
 ```
+
 ### extends在type中是'包含'的意思
+
 ### 左边的值会作为右边类型的子类型
-- 1、any unknown
-- 2、Object
-- 3、Number String Boolean
-- 4、number string boolean
-- 5、1 '123' true
-- 6、never
+
+* 1、any unknown
+* 2、Object
+* 3、Number String Boolean
+* 4、number string boolean
+* 5、1 '123' true
+* 6、never
+
 ```ts
 type num=1 extends number ?1:0 //num=1
 type num=1 extends any ?1:0 //num=1
@@ -790,7 +893,9 @@ type num=1 extends never ?1:0 //num=0
 ```
 
 # never类型
+
 #### TypeScript 将使用 never 类型来表示不应该存在的状态(很抽象是不是)
+
 ```ts
 type a=string&number //type a = never
 // 函数执行会报错或者异常 使用never类型更合适
@@ -817,8 +922,11 @@ function kun(value:action){
 ```
 
 # symbol
-#### 自ECMAScript 2015起，symbol成为了一种新的原生类型，就像number和string一样。
-#### symbol类型的值是通过Symbol构造函数创建的。
+
+#### 自ECMAScript 2015起，symbol成为了一种新的原生类型，就像number和string一样
+
+#### symbol类型的值是通过Symbol构造函数创建的
+
 ```js
 let a1:symbol=Symbol(2)
 let a2:symbol=Symbol(2)
@@ -847,6 +955,7 @@ console.log(Reflect.ownKeys(obj)) //[ 'name', Symbol(2), Symbol(2) ]
 ```
 
 ### 1、生成器
+
 ```ts
 function * gen(){
   yield Promise.resolve('蜡笔小新')//同步或者是异步
@@ -860,7 +969,9 @@ console.log(gn.next()) //{ value: '阿呆', done: false }
 console.log(gn.next()) //{ value: '正南', done: false }
 console.log(gn.next()) //{ value: undefined, done: true }
 ```
+
 ### 2、迭代器
+
 ```ts
 // set Map
 let set:Set<number>=new Set([1,2,3,2,1])//天然去重 1,2,3
@@ -945,7 +1056,9 @@ console.log(x1)
 ```
 
 # 泛型
+
 泛型 -> 动态类型
+
 ```ts
 function fn1(a:number,b:number):Array<number>{
   return [a,b]
@@ -980,6 +1093,7 @@ console.log(add(1,true)) //[ 1, true ]
 ```
 
 #### 手写axios泛型的应用
+
 ```ts
 const axios={
   get<T>(url:string):Promise<T>{
@@ -1003,7 +1117,9 @@ axios.get<Data>('./data.json').then(v=>{
   console.log(v) //{massage: 'suc', code: 0}
 })
 ```
+
 ## 泛型约束
+
 ```ts
 // extends泛型约束 ：T类型后更一个extends 在跟一个类型
 function add<T extends number>(a:T,b:T){
@@ -1023,7 +1139,9 @@ fn('')
 fn([])
 // fn(1)数字没有length
 ```
+
 ### 泛型约束 keyof
+
 ```ts
 let obj={
   name:'Tom',
@@ -1036,7 +1154,9 @@ function ob<T extends object,K extends keyof T>(obj:T,key:K){
 }
 console.log(ob(obj,'name')) //Tom
 ```
+
 ### 泛型约束 keyof -> for in 的用法
+
 ```ts
 interface Data{
   name:string
@@ -1058,11 +1178,13 @@ type b=Options<Data>
 ```
 
 # tscconfig.json 配置文件
+
 #### 生成配置文件
 
 ```bash
 tsc --init
 ```
+
 ```ts
 "compilerOptions": {
   "incremental": true, // TS编译器在第一次编译之后会生成一个存储编译信息的文件，第二次编译会在第一次的基础上进行增量编译，可以提高编译的速度
@@ -1181,6 +1303,7 @@ namespace A  {
 ```
 
 # 三斜线指令
+
 ```ts
 ///<reference path="b.ts" />
 ///<reference path="a.ts" />
@@ -1192,12 +1315,15 @@ A.c
 ///<reference path="node" />
 ```
 
-# 声明文件 declare 
+# 声明文件 declare
+
 当使用第三方库时，我们需要引用它的声明文件，才能获得对应的代码补全、接口提示等功能。
+
 ```
 npm i express
 npm i axios
 ```
+
 ```ts
 import aixos from 'axios'; //自带声明
 aixos.get('')
@@ -1222,7 +1348,9 @@ app.listen(9001,()=>{
   console.log('9001')
 })
 ```
-#### 手写声明文件 
+
+#### 手写声明文件
+
 ```ts
 // ../typings/express.d.ts
 import aixos from 'axios'; //自带声明
@@ -1249,7 +1377,9 @@ app.listen(9001,()=>{
 ```
 
 # Mixins混入
+
 * 对象的混入
+
 ```ts
 interface Name {
   name: string
@@ -1268,7 +1398,9 @@ let person2:Sex={sex:1}
 let obj=Object.assign(person,person1,person2)
 console.log(obj) //{ name: 'Lucar', age: 18, sex: 1 }
 ```
+
 * 类的混入
+
 ```ts
 class A{
   type:boolean= false;
@@ -1308,14 +1440,20 @@ console.log(ccc.getname()) //Lucar
 ```
 
 # 装饰器 Decorator
-#### 装饰器是一种特殊类型的声明，它能够被附加到类声明，方法， 访问符，属性或参数上。
+
+#### 装饰器是一种特殊类型的声明，它能够被附加到类声明，方法， 访问符，属性或参数上
+
 首先在tsconfig.json中修改 experimentalDecorators和emitDecoratorMetadata 为true 既可以使用装饰器
+
 ```js                               /* Specify what JSX code is generated. */
 "experimentalDecorators": true,                   /* Enable experimental support for legacy experimental decorators. */
 "emitDecoratorMetadata": true,                    /* Emit design-type metadata for decorated declarations in source files. */
 ```
+
 * 1、类装饰器 ClassDecorator target 构造函数
-  #### 不破坏原有类自身结构 ，从而给类添加属性和方法 起到修饰作用
+
+#### 不破坏原有类自身结构 ，从而给类添加属性和方法 起到修饰作用
+
 ```ts
 const Base:ClassDecorator=(target)=>{
   console.log(target) //[class Http]
@@ -1335,7 +1473,9 @@ Base(Http)
 console.log(http.name) //属性
 http.fn() //我是函数
 ```
+
 * 2、装饰器工厂 ClassDecorator
+
 ```ts
 const Base=(name:string)=>{
   const fn:ClassDecorator=(target)=>{
@@ -1354,7 +1494,9 @@ class Http{
 const http=new Http() as any
 console.log(http.name) //new name
 ```
+
 * 方法装饰器
+
 ```js
 import axios from "axios"
 
@@ -1398,8 +1540,11 @@ const http=new Http() as any
 // }
 // { res: -5 }
 ```
+
 * 参数装饰器ParameterDecorator
+
 #### 安装 npm i reflect-metadata
+
 ```ts
 import axios from "axios"
 
@@ -1444,7 +1589,9 @@ class Http{
 const http=new Http() as any
 // http.getList
 ```
+
 * 属性装饰器 PropertyDecorator
+
 ```ts
 import axios from "axios"
 
@@ -1502,26 +1649,3 @@ const http=new Http() as any
 ```
 
 # Rollup构建TS项目 & webpack构建TS项目 & esbuild + swc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
