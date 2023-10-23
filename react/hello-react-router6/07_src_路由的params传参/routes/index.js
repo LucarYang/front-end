@@ -22,7 +22,7 @@ const routes =[
                 element:<Message/>,
                 children:[
                     {
-                        path:'detail',
+                        path:'detail/:id/:title/:content',
                         element:<Detail/>
                     }
                 ]
