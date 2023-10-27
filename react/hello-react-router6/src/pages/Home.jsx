@@ -1,8 +1,9 @@
 import React from 'react'
-import {NavLink,Outlet}from 'react-router-dom'
+import {NavLink,Outlet,useOutlet}from 'react-router-dom'
 
 export default function Home() {
     // const [sum,setSum]=useState(1)
+    console.log(useOutlet())
   return (
     <div>
     <h2>Home组件内容</h2>
