@@ -1,6 +1,6 @@
 //1. alloc
-// let buf=Buffer.alloc(10)
-// console.log(buf)
+let buf=Buffer.alloc(10)
+console.log(buf)
 
 // //2. allocUnSafe
 // let buf2=Buffer.allocUnsafe(10)
