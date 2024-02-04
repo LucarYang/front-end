@@ -15,24 +15,27 @@ Buffer缓冲区，是一个类似于Array的对象。用于表示固定长度的
 let buf=Buffer.alloc(10)
 console.log(buf)
 
-//2. allocUnSafe
+//2. allocUnSafe 不安全，可能会包含旧的内存数据，alloc会对旧的内存清零，但是allocUnSafe创建快
 let buf2=Buffer.allocUnsafe(10)
 console.log(buf2)
 
 //3.from
 let buf3=Buffer.from('hello')
-let buf4=Buffer.from([150,110,111,121,117,108])
+let buf4=Buffer.from([105,108,111,118,101,121,111,117])
+console.log(buf3)
 console.log(buf4)
+
 ```
 
 ### Buffer的操作
 
 ```js
 
+// 转换字符串
 let buf3=Buffer.from('hello')
 let buf5=Buffer.from([105,108,111,118,101,121,111,117])
 
-console.log(buf5.toString())//utf-8
+console.log(buf5.toString())//utf-8 iloveyou
 
 // 通过[]对Buffer的元素读取和写入
 console.log(buf3[0].toString(2))//01101000
