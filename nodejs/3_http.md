@@ -252,5 +252,159 @@ server.listen(9000,()=>{
 
 ## 静态资源服务
 
-静态资源是指内容长时间不发生改变的资源，例如图片，视频，css文件，js文件，html文件 字体等
-动态资源是指内容经常更新的资源，例如网页首页
+- 静态资源是指内容长时间不发生改变的资源，例如图片，视频，css文件，js文件，html文件 字体等
+- 动态资源是指内容经常更新的资源，例如网页首页
+```js
+const http=require('http')
+const fs=require('fs')
+const { URL } = require('url')
+
+const server =http.createServer((request,response)=>{
+    //
+    let {pathname}=new URL(request.url,'http://localhost:9000/')
+    
+    let filePath=__dirname+'/page'+pathname
+    fs.readFile(filePath,(err,data)=>{
+        if(err){
+            response.statusCode=500
+            response.end(err)
+        }
+        response.end(data)
+    })
+})
+
+server.listen(9000,()=>{
+    console.log('server 启动')
+})
+```
+
+## 静态资源目录
+```js
+const http=require('http')
+const fs=require('fs')
+const { URL } = require('url')
+
+const server =http.createServer((request,response)=>{
+    //
+    let {pathname}=new URL(request.url,'http://localhost:9000/')
+    
+    let root=__dirname+'/page' //网站根目录
+    let filePath=root+pathname
+    fs.readFile(filePath,(err,data)=>{
+        if(err){
+            response.statusCode=500
+            response.end(err)
+        }
+        response.end(data)
+    })
+})
+
+server.listen(9000,()=>{
+    console.log('server 启动')
+})
+```
+
+## 网站中的URL
+    网页的URL主要分为两大类:相对路径、绝对路径
+
+#### 绝对路径
+    绝对路径可靠性强
+|形式|特点|
+|-|-|
+|httts://baidu.com/123|玩整体包含了协议、域名、路径、对口；直接向目标资源发送请求，容易理解。网站的外连接会用到此形式|
+|//baidu.com/123|省略协议；与页面URL的协议拼接形成完整URL再发送请求。大型网站用的比较多|
+|/123|与页面URL的协议、主机、端口拼接形成完整URL再发请求。中小型网站|
+
+
+#### 相对路径
+    相对路径在发送请求时，需要与当前页面URL路径进行计算，得到完整URL后，再发送请求，学习阶段用的比较多
+
+例如：httts://baidu.com/cource/
+|形式|最终的URL|
+|-|-|
+|./css/app.css|httts://baidu.com/cource/css/app.css|
+|js/app.js|httts://baidu.com/cource/js/app.js|
+|..img/logo.png|httts://baidu.com/cource/img/logo.png|
+|../../mp4/a.mp4|httts://baidu.com/cource/mp4/a.mp4|
+
+## 设置mine类型
+    媒体类型(通常称为 Multipurpose Internet Mail Extension 或者MIME类型)是一种标准，用来表示文档、文件或字节的性质和格式
+mime 类型结构 [type]/[subType]
+
+例如：text/html image/jpeg image/png application/json
+
+HTTP服务可以设置响应头Content-Type来表明响应体的MIME类型，浏览器会根据该类型该类型决定如何处理资源
+
+    常见文件对应的mime类型
+        html    text/html
+        css     text/css
+        js      text/javascript
+        png     text/png
+        jpg     text/jpeg
+        gif     text/gif
+        mp4     video/mp4
+        mp3     video/mpeg
+        json    application/json
+
+## 错误处理
+
+```js
+const http=require('http')
+const fs=require('fs')
+const { URL } = require('url')
+
+const server =http.createServer((request,response)=>{
+    if(request.method!=='GET'){
+        response.statusCode=405
+        response.end('<h1>405 Method Not  Allowed</h1>')
+        return
+    }
+    //
+    let {pathname}=new URL(request.url,'http://localhost:9000/')
+    
+    let root=__dirname+'/page'
+    let filePath=root+pathname
+    fs.readFile(filePath,(err,data)=>{
+        if(err){
+            switch(err.code){
+                case 'ENOENT':
+                    response.statusCode=404
+                    response.end('<h1>404 Not Found</h1>')
+                case 'EFERM':
+                    response.statusCode=403
+                    response.end('403 Forbidden')
+                default:
+                    response.statusCode=500
+                    response.end('500 Internal Server Error')
+            }
+            response.statusCode=500
+            response.end(err)
+        }
+        response.end(data)
+    })
+})
+
+server.listen(9000,()=>{
+    console.log('server 启动')
+})
+```
+
+## GET和POST请求
+#### GET请求场景
+- 在地址栏直接输入url访问
+- 点击a标签
+- link标签引入css
+- script标签引入js
+- video标签引入多媒体
+- img标签引入图片
+- from标签中的method味get
+- Ajax中的get请求
+#### POST请求场景
+- from标签中的method味post
+- Ajax中的post请求
+
+#### GET和POST请求区别
+1、作用 GET主要用来获取数据，POST主要用来递交数据
+2、参数位置不同。GET带参数请求是将参数缀到URL之后，PSOT带参数请求是将参数放到请求体中
+3、安全性。PSOT请求相对于GET安全一些，因为在浏览器中参数会暴露在地址栏中
+4、GET请求大小有限制，一般为2k，而POST请求则没有大小限制
