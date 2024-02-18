@@ -161,6 +161,7 @@ app.listen(3000,()=>{
     console.log('服务已启动 端口3000')
 })
 ```
+
 ### 路由中间件
 ```js
 // 1、导入express
@@ -207,3 +208,340 @@ app.listen(3000,()=>{
 
 ### 静态资源中间件
 
+```js
+// 1、导入express
+const express=require('express')
+
+// 2、创建应用对象
+
+const app=express()
+
+// 设置静态资源中间件
+app.use(express.static(__dirname+'/public'))
+
+
+// 3、创建路由
+app.get('/home',(req,res)=>{
+    res.send(' home')
+})
+
+// 4、监听端口 启动服务
+app.listen(3000,()=>{
+    console.log('服务已启动 端口3000')
+})
+```
+注意事项：
+- index.html文件为默认打开的资源
+- 如果静态资源与路由规则同时匹配，谁先匹配谁就响应
+- 路由响应动态资源，静态资源中间件响应静态资源
+
+
+### express框架_获取请求体数据
+
+express可以使用body-parser包处理请求体
+
+安装 npm i body-parser
+
+- json格式的请求体的中间件的中间件
+- querystring格式的请求体的中间件
+```js
+
+const express=require('express')
+const bodeParser=require('body-parser')
+
+// 创建应用对象
+const app=express()
+
+// 解析json格式的请求体的中间件的中间件
+const jsonParser=bodeParser.json()
+
+// 解析querystring格式的请求体的中间件
+const urlencodeParser=bodeParser.urlencoded({extended:false})
+
+// 创建路由规则
+app.get('/login',(req,res)=>{
+    // res.send('表单页面')
+    res.sendFile(__dirname+'/demo.html')
+})
+
+// post规则
+app.post('/login',urlencodeParser,(req,res)=>{
+    console.log(req.body)
+    res.send('获取用户数据')
+})
+
+// 启动服务
+app.listen(3000,()=>{
+    console.log('服务已启动')
+})
+```
+
+### 防盗链
+
+```js
+
+const express=require('express')
+const bodeParser=require('body-parser')
+
+// 创建应用对象
+const app=express()
+
+// 声明中间件
+app.use((req,res,next)=>{
+    // 检测请求头中referer是否是127.0.0.1
+    // 获取referer
+    let referer=req.get('referer')
+    if(referer){
+        // 实例化
+        let url=new URL(referer)
+        // 获取hostname
+        let hostname=url.hostname
+        console.log(hostname)
+        if(hostname!='127.0.0.1'){
+            res.status('404').send('<h1>404 Not Found</h1>')
+            return
+        }
+    }
+    console.log(referer)
+    next();
+})
+
+app.use(express.static(__dirname+'/public'))
+
+// 启动服务
+app.listen(3000,()=>{
+    console.log('服务已启动')
+})
+```
+
+### 路由模块化
+```js
+// ----------------------------homeRouter.js-----------------------------------
+// 1、导入express
+const express=require('express')
+
+// 2、创建路由对象
+const router=express.Router()
+
+//3、创建路由规则
+router.get('/home',(req,res)=>{
+    res.send('home')
+})
+
+
+//4、暴露router
+module.exports=router
+
+
+// ----------------------------adminRouter.js-----------------------------------
+// 1、导入express
+const express=require('express')
+
+// 2、创建路由对象
+const router=express.Router()
+
+//3、创建路由规则
+
+router.get('/admin',(req,res)=>{
+    res.send('admin')
+})
+
+//4、暴露router
+module.exports=router
+
+
+// --------------------------------main.js------------------------------------------
+// 1、导入express
+const express=require('express')
+
+const homeRouter=require('./routes/homeRouter')
+const adminRouter=require('./routes/adminRouter')
+
+// 2、创建应用对象
+
+const app=express()
+
+// 设置
+app.use(homeRouter)
+app.use(adminRouter)
+```
+
+
+### EJs模板引擎
+
+模板引擎是分离用户界面和业务数据的一种技术
+
+EJS是一个高效的JavaScript的模板引擎
+
+安装EJS
+
+    npm i ejs
+
+```js
+// 导入EJS
+const ejs=require('ejs')
+const fs=require('fs')
+
+// 字符串
+let china='中国'
+let weather='今天天气不错'
+// let str=`I Love U ${china}`
+
+// 使用ejs渲染
+let str=fs.readFileSync('./1_html.html').toString()
+let result=ejs.render(str,{china:china,weather})
+
+console.log(result)
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <h2>I Love U <%= china%></h2>
+        <p> <%= weather%></p>
+    </body>
+</html>
+```
+
+#### 列表渲染
+```js
+const ejs=require('ejs')
+const xiyou=['唐僧','孙悟空','猪八戒','沙僧']
+
+// // 原生JS
+// let str='<ul>'
+
+// xiyou.forEach(item=>{
+//     str+=`<li>${item}</li>`
+// })
+
+// str+='</ul>'
+// console.log(str)
+
+//EJS
+const fs=require('fs')
+let html=fs.readFileSync('./2_html.html').toString()
+let result=ejs.render(html,{xiyou:xiyou})
+console.log(result)
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>xiyou</title>
+    </head>
+    <body>
+        <ul>
+            <% xiyou.forEach(item=>{%>
+            <li><%=item %></li>
+            <%})%>
+        </ul>
+    </body>
+</html>
+```
+
+#### 条件渲染
+
+```js
+
+const ejs=require('ejs')
+// 变量
+let isLogin=false
+
+// 原生JS
+// if(isLogin){
+//     console.log('<p>欢迎回来</p>')
+// }else{
+//     console.log('<button>登录</button> <button>注册</button>')
+// }
+
+// EJS实现
+const fs=require('fs')
+let html=fs.readFileSync('./3_html.html').toString()
+let result=ejs.render(html,{isLogin})
+
+console.log(result)
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <header>
+            <% if(isLogin){ %>
+            <p>欢迎回来</p>
+            <% }else{%>
+            <button>登录</button> <button>注册</button>
+            <% }%>
+        </header>
+    </body>
+</html>
+```
+
+### express中使用ejs
+
+```js
+// 导入express
+const express=require('express')
+// 导入path
+const path=require('path')
+
+// 创建应用对象
+
+const app=express()
+// 1 设置模板引擎
+app.set('view engine','ejs')//pug twing
+// 2 设置模板文件存放的位置
+app.set('views',path.resolve(__dirname,'./views'))
+
+// 创建路由
+app.get('/home',(req,res)=>{
+    // 3 render 响应
+    // res.render('模板的文件','数据')
+    let title='我是title'
+    res.render('home',{title})
+})
+
+// 监听端口 启动服务
+app.listen(3000,()=>{
+    console.log('服务已启动 端口3000')
+})
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <h2><%= title %></h2>
+    </body>
+</html>
+```
+
+启动服务 访问http://127.0.0.1:3000/home
+
+#### express-generator
+
+express-generator应用生成器:可以快死创建一个应用的骨架
+
+全局安装 npm i -g express-generator
+
+创建一个express项目 express -e 10_generator
+
+进入项目 安装依赖 npm i
+
+运行项目 npm start
