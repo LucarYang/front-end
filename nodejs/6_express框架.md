@@ -534,14 +534,75 @@ app.listen(3000,()=>{
 
 启动服务 访问http://127.0.0.1:3000/home
 
-#### express-generator
+### express-generator
 
 express-generator应用生成器:可以快死创建一个应用的骨架
 
-全局安装 npm i -g express-generator
+    全局安装 
+    npm i -g express-generator
 
-创建一个express项目 express -e 10_generator
+    创建一个express项目
+    express -e 10_generator
 
-进入项目 安装依赖 npm i
+    进入项目 安装依赖 
+    npm i
 
-运行项目 npm start
+    运行项目 
+    npm start
+
+#### 文件上传
+formidable用于解析表单支持get/post请求参数文件上传等
+安装 npm i formidable
+
+```js
+const e = require('express');
+var express = require('express');
+var router = express.Router();
+
+// 导入formidable
+const {formidable} =require('formidable')
+
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
+
+// 显示网页表单(文件上传)
+router.get('/potrait',(req,res)=>{
+  res.render('potrait');
+})
+
+// 处理文件上传
+router.post('/potrait',(req,res,next)=>{
+  // 创建表单对象
+  const form= formidable({
+    multiples:true,
+    // 设置上传文件的保存目录
+    uploadDir:__dirname+'/../public/images',
+    // 保持文件后缀
+    keepExtensions:true
+  })
+
+  // 解析请求报文
+  form.parse(req,(err,fields,files)=>{
+    if(err){
+      next(err)
+      return
+    }
+    // console.log(fields)//text radio checkbox select
+    // console.log(files)//files
+    // res.json({fields,files})
+
+    // 服务器保存该图片的访问url
+    console.log(files)
+    let newname={...files.hand[0]}
+    console.log(newname.newFilename)
+    let imgUrl='/images/'+newname.newFilename //将此数据保存到数据库
+
+    res.send('ok'+imgUrl);
+  })
+})
+
+module.exports = router;
+
+```
