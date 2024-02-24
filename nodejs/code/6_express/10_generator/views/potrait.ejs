@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>potrait</title>
+    </head>
+    <body>
+        <h2>potrait</h2>
+        <!-- 文件上传必须的设置 -> enctype="multipart/form-data"-->
+        <form action="/potrait" method="post" enctype="multipart/form-data">
+            用户名 <input type="text" name="username" /><br />
+            头像 <input type="file" name="hand" />
+            <button>提交</button>
+        </form>
+    </body>
+</html>
