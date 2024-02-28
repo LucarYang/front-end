@@ -8,7 +8,15 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+<<<<<<< HEAD
+  "dependencies": {
+    "vue": "^3.3.4"
+  },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+=======
+  "devDependencies": {
+>>>>>>> 298e88f43f3440a4b44da5da839da4c0ee815e09
     "vite": "^4.4.5"
   }
 }
