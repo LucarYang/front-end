@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>块级元素与行内元素</title>
+    </head>
+    <body>
+        <!-- 块级元素 特点：独占一行-->
+        <marquee>块级元素</marquee>
+        <h1>块级元素</h1>
+        <p>块级元素</p>
+        <div>块级元素</div>
+        <div>块级元素</div>
+        <!-- 行内元素 特点：不独占一行-->
+        <input type="text" />
+        <input type="password" />
+        <span>行内元素span</span>
+
+        <!-- 规则1：块级元素中能写：行内元素、块级元素(几乎都能写……)-->
+        <div>
+            <span>span111</span>
+            <input type="text">
+            <div>div222</div>
+        </div>
+
+        <!-- 规则2：行内元素中能写：行内元素，但不能写块级元素 -->
+        <span>
+            <span>span111</span>
+            <input type="text">
+            <span>span</span>
+            <!-- <div>div 11</div> -->
+        </span>
+
+        <!-- 特殊规则：h1到h6不能嵌套 -->
+
+        <!-- 特殊规则：p标签中不写块元素 -->
+        <p>
+            <!-- <ul></ul> -->
+            <!-- <marquee>aaa</marquee>不推荐使用 -->
+        </p>
+    </body>
+</html>
