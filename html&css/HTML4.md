@@ -248,10 +248,92 @@ html结构
 - png
 - bmp
 - gif
-- webp
+- webp 未来趋势 ie不兼容
 - base64
 
+### 超链接
+target:新页签打开 _blank 原有页签打开_self
+```html
+<a href="https://miaosha.jd.com" target="_blank">去秒杀</a>
+```
+虽然a标签是行内元素，但a标签可以包裹除它自身以外的任何标签
 
+#### 跳转文件
+```html
+<!-- 浏览器可以直接打开的文件  -->
+    <a href="./resource/我的自拍.jpg">老吴</a>
+    <a href="./resource/小电影.mp4">电影</a>
+    <a href="./resource/小姐姐.gif">gif</a>
+    <a href="./resource/如何一夜暴富.pdf">pdf</a>
+
+    <!-- 浏览器不可以直接打开的文件  -->
+    <a href="./resource/内部资源.zip">zip</a>
+
+    <!-- 强制下载 -->
+    <a href="./resource/小电影.mp4" download="好看的电影 " >下载电影</a>
+```
+
+#### 跳转锚点
+```html
+ <a href="#htl">看灰太狼</a>
+    <a href="#atm">看奥特曼</a>
+
+    <p>我是一只羊，一只很肥美的羊</p>
+    <img src="./path_test/a/喜羊羊.jpg" alt="喜羊羊">
+
+    <a name="htl"></a>
+    <p>我是一只狼，一只很邪恶的狼</p>
+    <img src="./path_test/a/b/灰太狼.jpg" alt="灰太狼">
+
+    <p id="atm">我是一只奥特曼，一只很能打的奥特曼</p>
+    <img src="./奥特曼.jpg" alt="奥特曼">
+
+    <p>我是一只怪兽，一只很丑的怪兽</p>
+    <img src="./path_test/怪兽.jpg" alt="怪兽">
+
+    <p>整体的介绍完毕了</p>
+    <a href="#">回到顶部</a>
+    <a href="">刷新页面</a>
+    <a href="javascript:;">点我弹窗</a>
+```
+#### 唤起指定应用
+```html
+     <a href="tel:10010">打电话</a>
+    <a href="mailto:lucaryang.gamil.com">邮件</a>
+    <a href="sms:10086">发短信</a>
+```
+“超文本”（hypertext）是指连接单个网站内或多个网站间的网页的链接。
+
+### 列表
+
+```html
+<!-- 有序列表 Ordered list ol -->
+    <h2>要把大象装冰箱 拢共分几步</h2>
+    <ol>
+        <li>打开冰箱门</li>
+        <li>把大象放进去</li>
+        <li>把冰箱门关上 </li>
+    </ol>
+
+    <!-- 无需列表 Unordered list ul-->
+    <h2>我想出去玩</h2>
+    <ul>
+        <li>大理</li>
+        <li>三亚</li>
+        <li>泉州</li>
+        <li>潮汕</li>
+    </ul>
+    <!-- 自定义列表 definition list dl-->
+    <h2>如何更好地学习</h2>
+    <dl>
+        <dt>做好笔记</dt>
+        <dd>好记性不如烂笔头</dd>
+        <dt>多练习</dt>
+        <dd>多练习111</dd>
+        <dt>敲代码</dt>
+        <dd>敲代码111 </dd>
+    </dl>
+```
 
 
 
