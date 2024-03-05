@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>表单label</title>
+    </head>
+    <body>
+        <form action="https://search.jd.com/search">
+            <label for="zhanghu">账户：</label>
+            <input id="zhanghu" name="account" type="text" maxlength="10">
+            <br>
+            <label>
+                密码：
+                <input id='mima' name="pwd" type="password" maxlength="8">
+            </label>
+
+            <br>
+            性别：
+            <input id='nan' type="radio" name="gender" value="male" checked>
+            <label for="nan">男</label>
+            <input id='nv' type="radio" name="gender" value="female">
+            <label for="nv">女</label>
+            <br>
+            <label>
+                爱好：
+                <label><input type="checkbox" name="hobby"
+                        value="smoke">抽烟</label>
+                <label><input type="checkbox" name="hobby"
+                        value="drink">喝酒</label>
+                <label><input type="checkbox" name="hobby" value="perm"
+                        checked>烫头</label>
+            </label>
+            <br>
+            <label>
+                其他：
+                <textarea name="other" id cols="22" rows="5"></textarea>
+            </label>
+            <br>
+            籍贯：
+            <select name="place">
+                <option value='shandong' selected>山东</option>
+                <option value='hebei'>河北</option>
+                <option value='henan'>河南</option>
+                <option value='shanghai'>上海</option>
+            </select>
+            <br>
+
+            <!-- 隐藏域 -->
+            <input type="hidden" name='tag' value="123">
+            <!-- 确认按钮 第一种写法-->
+            <button>确认</button>
+            <!-- 确认按钮 第二种写法-->
+            <!-- <input type="submit" value="确认"> -->
+            <!-- 重置按钮 第二种写法-->
+            <button type="reset">重置</button>
+            <!-- 重置按钮 第一种写法-->
+            <!-- <input type="reset" value="重置"> -->
+
+            <!-- 普通按钮 第一种写法-->
+            <button type="button">检测账户是否被注册</button>
+            <!-- 普通按钮 第二种写法-->
+            <!-- <input type="button" value="检测账户是否被注册"> -->
+        </form>
+    </body>
+</html>

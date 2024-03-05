@@ -334,8 +334,130 @@ target:新页签打开 _blank 原有页签打开_self
         <dd>敲代码111 </dd>
     </dl>
 ```
+### 表格
+```html
+ <table border="1 ">
+    <!-- 表格标题 -->
+    <caption>标题信息</caption>
+    <!-- 表格头部 -->
+    <thead>
+        <!-- 行 -->
+        <tr>
+            <!-- 单元格 -->
+            <th>姓名</th>
+            <th>性别</th>
+            <th>年龄</th>
+            <th>民族</th>
+            <th>还有啥</th>
+        </tr>
+    </thead>
+    <!-- 表格主题 -->
+    <tbody>
+        <tr>
+            <td>张三</td>
+            <td>男</td>
+            <td>18</td>
+            <td>汉族</td>
+            <td>哈哈哈</td>
+        </tr>
+        <tr>
+            <td>李四</td>
+            <td>男</td>
+            <td>28</td>
+            <td>汉族</td>
+            <td>想学学</td>
+        </tr>
+        <tr>
+            <td>王五</td>
+            <td>男</td>
+            <td>38</td>
+            <td>汉族</td>
+            <td>哈哈哈</td>
+        </tr>
+        <tr>
+            <td>赵六</td>
+            <td>男</td>
+            <td>48</td>
+            <td>汉族</td>
+            <td>哈1哈哈</td>
+        </tr>
+    </tbody>
+    <!-- 表格脚注 -->
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>合计4人</td>
+        </tr>
+    </tfoot>
+</table>
+```
 
+#### 表单
+form 表单的常用属性
+- action 请求地址
+- target 表单提交后_self 在本窗口打开,_blank在新窗口打开
+- method 表单请求方式  get/post
+```html
+<form action="https://www.baidu.com/s">
+    <input name="wd" type="text">
+    <button>百度搜索</button>
+</form>
+```
 
+##### 表单常用控件
+```html
+ <form action="https://search.jd.com/search">
+    <!-- 文本输入 -->
+    账户：<input name="account" type="text" value="张三" maxlength="10">
+    <br>
+    <!-- 密码输入 -->
+    密码：<input name="pwd" type="password" value="zhangsan" maxlength="8">
+    <br>
+    <!-- 单选框 -->
+    性别：
+    <input type="radio" name="gender" value="male" checked>男
+    <input type="radio" name="gender" value="female">女
+    <br>
+    <!-- 复选框 -->
+    爱好：
+    <input type="checkbox" name="hobby" value="smoke">抽烟
+    <input type="checkbox" name="hobby" value="drink">喝酒
+    <input type="checkbox" name="hobby" value="perm" checked>烫头
+    <br>
+    <!-- 文本域 -->
+    其他：
+    <textarea name="other" id cols="22" rows="5"></textarea>
+    <br>
+    <!-- 下拉框 -->
+    籍贯：
+    <select name="place">
+        <option value='shandong' selected>山东</option>
+        <option value='hebei'>河北</option>
+        <option value='henan'>河南</option>
+        <option value='shanghai'>上海</option>
+    </select>
+    <br>
+
+    <!-- 隐藏域 -->
+    <input type="hidden" name='tag' value="123">
+    <!-- 确认按钮 第一种写法-->
+    <button>确认</button>
+    <!-- 确认按钮 第二种写法-->
+    <!-- <input type="submit" value="确认"> -->
+    <!-- 重置按钮 第二种写法-->
+    <button type="reset">重置</button>
+    <!-- 重置按钮 第一种写法-->
+    <!-- <input type="reset" value="重置"> -->
+
+    <!-- 普通按钮 第一种写法-->
+    <button type="button">检测账户是否被注册</button>
+    <!-- 普通按钮 第二种写法-->
+    <!-- <input type="button" value="检测账户是否被注册"> -->
+</form>
+```
 
 
 

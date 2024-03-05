@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>表格跨行跨列</title>
+    </head>
+    <body>
+        <!-- 表格 -->
+        <table border="1" cellspacing='0'>
+            <!-- 表格标题 -->
+            <caption>课表</caption>
+            <!-- 表格头部 -->
+            <thead align="center" valign="middle">
+                <!-- 行 -->
+                <tr>
+                    <!-- 单元格 -->
+                    <th>项目</th>
+                    <th colspan="5">上课</th>
+                    <th colspan="2">活动与休息</th>
+                </tr>
+            </thead>
+            <!-- 表格主题 -->
+            <tbody>
+                <tr>
+                    <td>星期</td>
+                    <td>星期1</td>
+                    <td>星期2</td>
+                    <td>星期3</td>
+                    <td>星期4</td>
+                    <td>星期5</td>
+                    <td>星期6</td>
+                    <td>星期7</td>
+                </tr>
+                <tr>
+                    <td rowspan="4">上午</td>
+                    <td>男</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                    <td>哈哈哈</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                    <td rowspan="4">休息</td>
+                </tr>
+                <tr>
+                    <td>男</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                    <td>哈哈哈</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                </tr>
+                <tr>
+                    <td>男</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                    <td>哈哈哈</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                </tr>
+                <tr>
+                    <td>男</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                    <td>哈哈哈</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">下午</td>
+                    <td>男</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                    <td>哈哈哈</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                    <td rowspan="2">休息</td>
+                </tr>
+                <tr>
+                    <td>张三</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                    <td>哈哈哈</td>
+                    <td>18</td>
+                    <td>汉族</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
