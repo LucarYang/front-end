@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>兄弟选择器</title>
+        <style>
+            /* 
+                兄弟选择器
+                相邻兄弟选择器 - 选中div后仅仅相邻的兄弟元素(睡在我下铺的兄弟)
+            div+p{
+                color: skyblue;
+            } 
+            */
+
+            /* 
+                兄弟选择器
+                通用兄弟选择器 - 选中div后所有的兄弟元素(睡在我下铺的所有兄弟)
+            div+p{
+                color: skyblue;
+            } 
+            */
+           div~p{
+            color: skyblue;
+           }
+           li+li{
+            color: rebeccapurple;
+           }
+        </style>
+    </head>
+    <body>
+        <p>font-end</p>
+        <div>前端</div>
+        <p>react</p>
+        <p>JavaScript</p>
+        <p>node</p>
+        <div>html</div>
+        <p>vue</p>
+        <ul>
+            <li>item</li>
+            <li>item</li>
+            <li>item</li>
+            <li>item</li>
+        </ul>
+    </body>
+</html>

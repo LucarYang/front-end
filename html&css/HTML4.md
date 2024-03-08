@@ -395,7 +395,7 @@ target:新页签打开 _blank 原有页签打开_self
 </table>
 ```
 
-#### 表单
+### 表单
 form 表单的常用属性
 - action 请求地址
 - target 表单提交后_self 在本窗口打开,_blank在新窗口打开
@@ -458,8 +458,78 @@ form 表单的常用属性
     <!-- <input type="button" value="检测账户是否被注册"> -->
 </form>
 ```
+### 框架标签 iframe
+```html
+<!-- 利用iframe 嵌入网页-->
+<iframe src="https://www.toutiao.com" width="300" height="200"
+    frameborder="0"></iframe>
 
+<!-- 嵌入其他内容 -->
+<iframe src="../HTML4/resource/如何一夜暴富.pdf" frameborder="0"></iframe>
+<iframe src="./30_表单label标签.html" frameborder="0"></iframe>
 
+<!-- 与超链接的target属性配置使用 -->
+<a href="https://www.toutiao.com" target="tt">看新闻</a><br>
+<iframe name="tt" frameborder="0"></iframe>
+
+<!-- 与表单的target属性配置使用 -->
+<form action="https://so.toutiao.com、search" target="tt">
+    <input type="text" name="keyword">
+    <input type="submit" value="搜">
+</form>
+```
+
+### 字符实体
+```html
+<!-- 在html中用一种特殊形式的内容，来表达某个符号 -->
+<!-- &nbsp; -->
+<div>我 美女</div>
+<div>我 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;美女</div>
+<div>我 &#160;&#160;&#160;&#160;&#160;美女</div>
+
+<!-- &lt;和&gt; -->
+<div>&lt;h1&gt;是一个标签</div>
+
+<!-- &amp; -->
+<div>表示空格的字符实体 &amp;nbsp;</div>
+<div>表示&的字符实体 &amp;amp;</div>
+
+<!-- &yen; -->
+<div>当前价格为 &yen;199</div>
+
+<!-- 版权所有 -->
+<div>版权所有&copy;</div>
+
+<!-- 乘号 -->
+<div>2&times;2=4</div>
+
+<!-- 除号 -->
+<div>2&divide;2=1</div>
+```
+
+### meta标签
+```html
+<!-- 配置字符编码 -->
+<meta charset="UTF-8">
+<!-- 针对IE浏览器的兼容性设置 -->
+<meta http-equiv="X-UA-Compatible" content='IE=edge'>
+<!-- 针对移动端的配置 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 配置网页关键字 -->
+<meta name="keywords" content="网上shopping,衣服,电子商务">
+<!-- 配置网页描述信息 -->
+<meta name="description" content="80字以内">
+<!-- 搜索引擎爬虫配置 -->
+<meta name="robots" content='noindex'>
+<!-- 配置作者 -->
+<meta name="author" content="lucar">
+<!-- 配置网页生成工具 -->
+<meta name="generator" content="vscode">
+<!-- 配置定义网页版权信息 -->
+<meta name="ccopyright" content="2023-2027©版权">
+<!-- 配置网页自动刷新 -->
+<meta http-equiv="refresh" content='10;url=https://www.baidu.com'>
+```
 
 
 

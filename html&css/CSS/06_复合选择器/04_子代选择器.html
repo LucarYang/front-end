@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>子代选择器</title>
+        <style>
+            /* 
+                子代选择器
+                选中指定元素中，符合要求的子元素(儿子元素)
+                父级选择器>子级选择器{}
+            */
+           div>a{
+            color: skyblue;
+           }
+           p>a{
+            color: chocolate;
+           }
+           .foot>a{
+            color: red;
+           }
+        </style>
+    </head>
+    <body>
+        <div>
+            <a href>张三</a>
+            <a href>李四</a>
+            <a href>王五</a>
+            <p>
+                <a href>赵六</a>
+                <div class="foot">
+                    <a href>孙七</a>
+                </div>
+            </p>
+        </div>
+    </body>
+</html>

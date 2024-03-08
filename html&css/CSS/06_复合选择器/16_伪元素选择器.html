@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>伪元素选择器</title>
+        <style>
+            /* 伪元素 ————很像元素，但不是元素(element) 是元素中的一些特殊位置 */
+
+            /* 选中div中第一个文字 */
+            div::first-letter{
+                color: orange;
+                font-size: 30px;
+            }
+             /* 选中div中第一行 */
+            div::first-line{
+                background-color: antiquewhite;
+            }
+            /* 选中div中被鼠标选择的问题 */
+            div::selection{
+                background-color: green;
+                color: white;
+            }
+            /* 选中的是input元素中的提示文字placeholder */
+            input::placeholder{
+                color: aquamarine;
+            }
+            /* 选中的是p元素最开始的位置，随后创建一个子元素(必须用content属性指定内容) */
+            p::before{
+                content: '￥';
+            }
+             /* 选中的是p元素最后的位置，随后创建一个子元素(必须用content属性指定内容)  */
+            p::after{
+                content: '.00';
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Lorem\lorem100（输入`lorem100`回车即可自动生成100个字） -->
+        <div>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod
+            magnam, esse culpa autem id at laborum beatae minima maxime amet
+            libero ab nesciunt odit? Eaque ratione corrupti necessitatibus ipsam
+            magni.</div>
+        <input type="text" placeholder="输入用户名">
+        <p>199</p>
+        <p>299</p>
+        <p>399</p>
+        <p>499</p>
+    </body>
+</html>

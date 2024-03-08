@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>交集选择器</title>
+        <style>
+            .rich{
+                color: gold;
+            }
+            .beauty{
+                color: red;
+            }
+            /* 
+            交集选择器 选中同时符合多个条件的元素
+            交际有并且的含义：既...又...的函数
+            语法： 选择器1选择器2选择器3...{}
+
+             */
+            /* p.beauty#xg{ id为xg
+                color: green;
+            } */
+            /* 选中 类名为beauty的p元素 */
+            p.beauty{
+                color: green;
+            }
+
+            /* 选中 类名包含rich和beauty的元素 */
+            .rich.beauty{
+                color: orange;
+            }
+        </style>
+    </head>
+    <body>
+        <h2 class="rich">张三</h2>
+        <h2 class="beauty">李四</h2>
+        <h2 class="rich beauty">王五</h2>
+        <hr>
+        <p class="beauty">小狗</p>
+        <p class="beauty">小猫</p>
+    </body>
+</html>

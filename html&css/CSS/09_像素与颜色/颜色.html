@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>颜色</title>
+        <style>
+        .hello1{
+            /* 颜色名 */
+            color: darkred; 
+        }
+        .hello2{
+            /* 
+            RGB
+            RGBA(红(0~255),绿(0~255),蓝(0~255),透明度(0到1)) 
+            */
+            color: rgb(138,43,226,0.5);
+        }
+        .hello3{
+            /* 
+            HEX #
+            HEXA #
+            HEX的原理与rgb一样，依然是通过红绿蓝进行组合，只不过要通过6个数字，分成3组来表达。格式为#rrggbb
+            每一位的取值范围[0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f],最小为00，最大为ff
+            HEXA 不支持
+            */
+            color: #ff0000;
+            background-color: #00f2;
+        }
+        .hello4{
+            /* 
+            hsl
+            color: hsl(色相, 饱和度, 亮度);
+            color:hsla(色相, 饱和度, 亮度,透明度)
+             */
+            color: hsl(0deg, 100%, 50%);
+            background-color:hsla(180deg, 100%, 80%,0.68)
+        }
+    </style>
+    </head>
+    <body>
+        <div class="hello1">hello</div>
+        <div class="hello2">hello</div>
+        <div class="hello3">hello</div>
+        <div class="hello4">hello</div>
+    </body>
+</html>

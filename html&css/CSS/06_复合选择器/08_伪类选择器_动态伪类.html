@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>0伪类选择器_动态伪类</title>
+        <style>
+            /* 伪类 --很像类，但不是类(class)，是元素特殊状态的一种表现 */
+
+            /* 选中的是没有访问过的a元素 */
+            a:link{
+                color: skyblue;
+            }
+
+            /* 选中的是访问过的a元素 */
+            a:visited{
+                color: gray;
+            }
+
+             /* 选中的是鼠标悬浮状态的a元素 */
+            a:hover{
+                color: skyblue;
+            }
+            /* 选中的是激活状态的a元素 */
+            a:active{
+                color: green;
+            }
+
+            span:hover{
+                color: skyblue;
+            }
+            span:active{
+                color: green;
+            }
+
+            input:focus,select:focus{
+                color:dimgrey;
+                background-color: antiquewhite;
+            }
+            /* select:focus{
+                color:dimgrey;
+                background-color: antiquewhite;
+            } */
+            /* 
+            :link 超链接未被访问的状态
+            :visited 超链接访问过的状态
+            :hover 鼠标悬浮在元素上的状态
+            :active 元素激活的状态
+            
+            遵循LVHA 顺序：
+            link > visited > hover > active */
+        </style>
+    </head>
+    <body>
+        <a href="https://www.baidu.com">去百度</a>
+        <a href="https://www.jd.com">去京东</a>
+        <span>hover和active是所有元素具有的伪类</span>
+        <br>
+        <input type="text" name id><br>
+        <input type="text" name id><br>
+        <input type="text" name id><br>
+        <select>
+            <option value="bj">北京</option>
+            <option value="sh">上海</option>
+        </select>
+    </body>
+</html>

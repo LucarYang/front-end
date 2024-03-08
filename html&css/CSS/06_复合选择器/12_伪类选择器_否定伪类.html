@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>伪类选择器_否定伪类</title>
+    <style>
+            /* 否定伪类 :not(选择器)，排除满足括号中条件的选择器 */
+            /* 选中的是div的儿子p元素，但排除class='fail' */
+          div>p:not(.fail){
+            color: red;
+          }
+
+           /* 选中的是div的儿子p元素，但排除title属性值以come开头的 */
+          div>p:not([title^='come']){
+            color: orange;
+          }
+
+            /* 选中的是div的儿子p元素，但排除第一个儿子p元素 */
+          div>p:not(:first-child){
+            color: gray;
+          }
+        </style>
+  </head>
+  <body>
+    <!-- 结构1 -->
+    <div>
+      <p>张三 98</p>
+      <p>李四 89</p>
+      <p>王五 88</p>
+      <p>赵六 70</p>
+      <p class="fail" title="come on">苏轼 68</p>
+      <p class="fail">苏辙 58</p>
+    </div>
+
+  </body>
+</html>

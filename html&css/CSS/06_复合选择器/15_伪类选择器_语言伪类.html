@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>伪类选择器_语言伪类</title>
+        <style>
+            /* 根据指定的语言选择元素 本质是看lang属性的值 */
+           div:lang(en){
+            color: gray;
+           }
+           :lang(zh-CN){
+            color: green;
+           }
+        </style>
+    </head>
+    <body>
+        <div>shanghai</div>
+        <div lang="en">hello 你好</div>
+        <p>你好</p>
+        <span>前端</span>
+    </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>伪类选择器_概念</title>
+        <style>
+            /* 伪类 --很像类，但不是类(class)，是元素特殊状态的一种表现 */
+
+            /* 选中的是没有访问过的a元素 */
+            a:link{
+                color: skyblue;
+            }
+
+            /* 选中的是访问过的a元素 */
+            a:visited{
+                color: gray;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="https://www.baidu.com">去百度</a>
+        <a href="https://www.jd.com">去京东</a>
+    </body>
+</html>

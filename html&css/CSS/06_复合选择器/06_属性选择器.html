@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>属性选择器</title>
+        <style>
+            /* 第一种写法：选中具有title属性的元素 */
+            /* [title]{
+                color: skyblue;
+            } */
+
+             /* 第二种写法：选中具有title属性，且属性值css2的元素 */
+             /* [title="css2"]{
+                color: skyblue;
+            }  */
+
+            /* 第三种写法：选中具有title属性，且属性值以字母a开头的元素 */
+             /* [title^="a"]{
+                color: skyblue;
+            }  */
+
+            /* 第四种写法：选中具有title属性，且属性值以字母u结尾的元素 */
+            /* [title$="u"]{
+                color: skyblue;
+            }  */
+
+             /* 第四种写法：选中具有title属性，且属性值中包含字母u的元素 */
+             [title*="u"]{
+                color: skyblue;
+            } 
+        </style>
+    </head>
+    <body>
+        <div title="css1"> css </div>
+        <div title="css2"> css </div>
+        <div title="acss3"> css </div>
+        <div title="acss4u"> css </div>
+    </body>
+</html>

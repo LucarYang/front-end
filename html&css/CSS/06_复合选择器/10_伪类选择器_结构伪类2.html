@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>伪类选择器_结构伪类</title>
+        <style>
+            /* 选中的是div的第一个儿子p元素(按照所有兄弟计算的) 看>结构1 */
+            /* div>p:last-child{
+                color: red;
+            } */
+
+            /* 选中的是div的第n个儿子p元素(按照所有兄弟计算的) 看>结构1 */
+            /* div>p:nth-child(3){
+                color: red;
+            } */
+
+            /* 选中的是div的第n个儿子p元素(按照所有兄弟计算的) 看>结构2 */
+            /* 
+            关于n的值
+            1、0或者不写 什么都选不中
+            2、n 选择所有子集
+            3、1~ 正无穷的整数，选中对应序号的元素
+            4、2n even 选中序号为偶数的子级
+            5、2n+1 odd 选中序号为奇数的子级
+            6、-n+5 选中序号前五个的子级
+            格式：an+b
+            */
+            /* div>p:nth-child(-n+5){
+                color: red;
+            } */
+            
+             /* 选中的是div的第一个儿子p元素(按照所有同类型兄弟计算的) 看>结构3 */
+            /* div>p:first-of-type{
+                color: red;
+            } */
+
+            /* 选中的是div的最后一个儿子p元素(按照所有同类型兄弟计算的) 看>结构3 */
+            /* div>p:last-of-type{
+                color: red;
+            } */
+
+            /* 选中的是div按照所有同类型的p元素的第n个(按照所有同类型兄弟计算的) 看>结构3 */
+            div>p:nth-last-of-type(3){
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- 结构1 -->
+        <!-- <div>
+            <p>张三 98</p>
+            <p>李四 89</p>
+            <p>王五 88</p>
+            <p>赵六 70</p>
+            <p>苏轼 68</p>
+            <p>苏辙 58</p>
+        </div> -->
+
+        <!-- 结构2 -->
+        <!-- <div>
+            <p>item1</p>
+            <p>item2</p>
+            <p>item3</p>
+            <p>item4</p>
+            <p>item5</p>
+            <p>item6</p>
+            <p>item7</p>
+            <p>item8</p>
+            <p>item9</p>
+            <p>item10</p>
+        </div> -->
+
+        <!-- 结构3 -->
+        <div>
+            <span>测试</span>
+            <p>张三 98</p>
+            <p>李四 89</p>
+            <p>王五 88</p>
+            <p>赵六 70</p>
+            <p>苏轼 68</p>
+            <p>苏辙 58</p>
+            <span>测试end</span>
+        </div>
+    </body>
+</html>
