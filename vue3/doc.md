@@ -161,3 +161,292 @@ diff 是什么？diff 就是比较两个树，render 会生成两颗树，一个
 
 - customRef 自定义 ref
   customRef 是个工厂函数要求我们返回一个对象 并且实现 get 和 set 适合去做防抖之类的
+
+```html
+<script setup lang="ts">
+  import { ref, reactive, onMounted, shallowRef, customRef } from "vue";
+
+  function myRef<T = any>(value: T) {
+    let timer: any;
+    return customRef((track, trigger) => {
+      return {
+        get() {
+          track();
+          return value;
+        },
+        set(newVal) {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            console.log("触发了set");
+            value = newVal;
+            trigger();
+          }, 500);
+        },
+      };
+    });
+  }
+
+  const name = myRef<string>("小满");
+
+  const change = () => {
+    name.value = "大满";
+  };
+</script>
+```
+
+- ref 获取 DOM
+
+```html
+<template>
+  <div>
+    <button @click="changeMsg">change</button>
+    <div ref="dom">我是dom</div>
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { ref } from "vue";
+  const dom = ref<HTMLElement>();
+  const changeMsg = () => {
+    console.log(dom.value?.innerText);
+  };
+</script>
+```
+
+## reactive
+
+reactive 和 ref 一样都是将一个变量作为响应式变量；用来绑定复杂的数据类型 例如 对象 数组
+
+```html
+<template>
+  <div>
+    <form action="">
+      <input v-model="form.name" type="text" />
+      <br />
+      <input v-model="form.age" type="text" />
+      <br />
+      <button @click.prevent="submit">submit</button>
+    </form>
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { ref, reactive } from "vue";
+  // ref, reactive
+  //ref支持所有类型，reactive支引用类型 Array Object Map Set
+  //ref 取值赋值都需要加.value  reactive是不需要的
+  type M = {
+    name: string;
+    age: number;
+  };
+  let form = reactive<M>({
+    name: "xx",
+    age: 13,
+  });
+
+  const submit = () => {
+    console.log(form);
+  };
+  form.age = 15;
+</script>
+
+<style></style>
+```
+
+ref, reactive 区别
+
+- ref 支持所有类型，reactive 支引用类型 Array Object Map Set
+- ref 取值赋值都需要加.value reactive 是不需要的
+
+reactive proxy 不能直接赋值 否则破坏响应式的对象： 解决方案
+
+- 1、数组 可以使用 push 加解构
+- 2、添加一个对象把数组最为一个属性去解决
+
+```html
+<template>
+  <div>
+    <ul>
+      <li v-for="item in list.arr">{{ item }}</li>
+    </ul>
+    <button @click="add">add</button>
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { ref, reactive } from "vue";
+  // ref, reactive
+  //ref支持所有类型，reactive支引用类型 Array Object Map Set
+  //ref 取值赋值都需要加.value  reactive是不需要的
+
+  // reactive proxy 不能直接赋值 否则破坏响应式的对象
+  // 解决方案
+  // 1、数组 可以使用push加解构
+  // 2、添加一个对象把数组最为一个属性去解决
+
+  // let list = reactive<string[]>([])
+  let list = reactive<{ arr: string[] }>({ arr: [] });
+
+  const add = () => {
+    setTimeout(() => {
+      let res = ["ABC", "BCD", "EDF"];
+      // list.push(...res)
+      list.arr = res;
+      console.log(list);
+    }, 500);
+  };
+</script>
+```
+
+- readonly 拷贝一份 proxy 对象将其设置为只读
+
+```html
+<script setup lang="ts">
+  import { reactive, readonly } from "vue";
+  let obj = reactive({ name: "tom" });
+  const read = readonly(obj);
+  const show = () => {
+    obj.name = "xxx";
+    console.log(obj.name);
+    console.log(read);
+  };
+</script>
+```
+
+- shallowReactive 只能对浅层的数据 如果是深层的数据只会改变值 不会改变视图
+
+```html
+<script setup lang="ts">
+  import { shallowReactive } from "vue";
+
+  let obj2: any = shallowReactive({
+    foo: {
+      bar: {
+        num: 1,
+      },
+    },
+  });
+
+  const edit = () => {
+    // obj2.foo.bar.num = 234
+    obj2.foo = { name: "dd" };
+    console.log(obj2);
+  };
+</script>
+```
+
+## toRef toRefs toRaw
+
+- toRef
+
+```html
+<script setup lang="ts">
+  import { toRef, reactive, toRefs, toRaw } from "vue";
+
+  // toRef 只能修改响应式对象的值 非响应式视图毫无变化，
+  const man = { name: "tom", age: 23, like: "ride" };
+
+  const like = toRef(man, "like");
+
+  const change = () => {
+    like.value = "ball";
+    console.log(like); //Ref<"ball">
+  };
+</script>
+```
+
+- toRefs 可以帮我们批量创建 ref 对象主要是方便我们解构使用
+
+```html
+<script setup lang="ts">
+  import { toRef, reactive, toRaw, toRefs } from "vue";
+
+  // toRef 只能修改响应式对象的值 非响应式视图毫无变化，
+  const man = reactive({ name: "tom", age: 23, like: "ride" });
+
+  const { name, age, like } = toRefs(man);
+  // const like = toRef(man, 'like')
+
+  const change = () => {
+    like.value = "ball";
+    console.log(like);
+  };
+
+  // const toRefs = <T extends object>(object: T) => {
+  //     const map: any = {}
+  //     for (let key in object) {
+  //         map[key] = toRef(object, key)
+  //     }
+  //     return map
+  // }
+</script>
+```
+
+- toRaw 将响应式对象转化为普通对象
+
+```html
+<script setup lang="ts">
+  import { toRef, reactive, toRaw, toRefs } from "vue";
+
+  // toRef 只能修改响应式对象的值 非响应式视图毫无变化，
+  const man = reactive({ name: "tom", age: 23, like: "ride" });
+
+  const change = () => {
+    console.log(man, toRaw(man));
+    // console.log(man, man['_v_raw'])
+  };
+</script>
+```
+
+## computed 计算属性
+
+计算属性就是当依赖的属性的值发生变化的时候，才会触发他的更改，如果依赖的值，不发生变化的时候，使用的是缓存中的属性值
+
+- 选项式写法
+
+```html
+<template>
+  <div>
+    <div>姓 <input v-model="firstName" type="text" /></div>
+  </div>
+  <div>
+    <div>明 <input v-model="lastName" type="text" /></div>
+  </div>
+  <div>全名{{ name }}</div>
+  <button @click="changenName">修改</button>
+</template>
+
+<script setup lang="ts">
+  import { ref, computed } from "vue";
+  let firstName = ref("张");
+  let lastName = ref("三");
+  // 1、选项式写法，支持一个对象传入get函数以及set函数自定义操作
+  let name = computed<string>({
+    get() {
+      return firstName.value + "-" + lastName.value;
+    },
+    set(newVal) {
+      // console.log(newVal.split('-'))
+      [firstName.value, lastName.value] = newVal.split("-");
+    },
+  });
+
+  const changenName = () => {
+    name.value = "小-四";
+  };
+</script>
+```
+
+- 函数式写法
+
+```html
+<script setup lang="ts">
+  import { ref, computed } from "vue";
+  let firstName = ref("张");
+  let lastName = ref("三");
+  // 2、函数式写法 只能支持一个getter函数 不允许修改的值
+  let name = computed(() => firstName.value + "-" + lastName.value);
+</script>
+```
+
+https://xiaoman.blog.csdn.net/article/details/122792620
