@@ -449,4 +449,108 @@ reactive proxy 不能直接赋值 否则破坏响应式的对象： 解决方案
 </script>
 ```
 
+```html
+<template>
+  <div>
+    <div>
+      <input v-model="keyWord" placeholder="搜索" type="text" />
+    </div>
+    <div style="margin-top: 20px;">
+      <table>
+        <thead>
+          <tr>
+            <th>物品名称</th>
+            <th>物品单价</th>
+            <th>物品数量</th>
+            <th>物品总价</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in searchData">
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.num }}</td>
+            <td>{{ item.num * item.price }}</td>
+            <td>
+              <button @click="item.num > 1 ? (item.num--) : null">-</button>
+              <input v-model="item.num" type="number" />
+              <button @click="item.num < 99 ? (item.num++) : null">+</button>
+            </td>
+            <td><button @click="del(index)">删除</button></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5" align="right">
+              <span>总价：{{ total }}</span>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { ref, reactive, computed } from "vue";
+  // let $total = ref<number>(0)
+  let keyWord = ref<string>("");
+  interface Data {
+    name: string;
+    price: number;
+    num: number;
+  }
+  let data = reactive<Data[]>([
+    { name: "测试1", price: 100, num: 1 },
+    { name: "测试2", price: 120, num: 1 },
+    { name: "测试3", price: 110, num: 1 },
+  ]);
+
+  // const total = () => {
+  //     $total.value = data.reduce((prev: number, next: Data) => {
+  //         return prev + next.num * next.price
+  //     }, 0)
+  // }
+
+  // total()
+
+  const total = computed(() => {
+    return data.reduce((prev: number, next: Data) => {
+      return prev + next.num * next.price;
+    }, 0);
+  });
+  const del = (index: number) => {
+    data.splice(index, 1);
+    // total()
+  };
+
+  const searchData = computed(() => {
+    return data.filter((item: Data) => {
+      return item.name.includes(keyWord.value);
+    });
+  });
+</script>
+
+<style scoped></style>
+```
+
+## watch 监听数据源
+
+需要侦听特定的数据源，并在单独的回调函数中执行副作用
+
+```js
+//watch第一个参数监听源
+
+//watch第二个参数回调函数cb（newVal,oldVal）
+
+//watch第三个参数一个options配置项是一个对象
+
+{
+  immediate: true; //是否立即调用一次
+
+  deep: true; //是否开启深度监听
+}
+```
+
 https://xiaoman.blog.csdn.net/article/details/122792620
