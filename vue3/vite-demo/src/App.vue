@@ -1,32 +1,34 @@
 <template>
 
     <div>
-        case1:
-        <input v-model="message.foo.bar.name" type="text">
-        <hr>
-        case2:
-        <input v-model="message2" type="text">
+        <input type="text" v-model="message" name="" id="ipt">
+        <input type="text" v-model="message2" name="" id="">
+        <button @click="stopWatch">停止监听</button>
     </div>
 
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, watch } from 'vue'
+import { watchEffect, ref, reactive } from 'vue'
 
-let message = ref({
-    foo: {
-        bar: {
-            name: '测试'
-        }
+let message = ref<string>("飞机")
+let message2 = ref<string>("大炮")
+
+const stop = watchEffect((oninavlidate) => {
+    // let ipt: HTMLInputElement = document.querySelector('#ipt') as HTMLInputElement
+    console.log('message:', message.value, message2.value)
+    // console.log(ipt)
+    oninavlidate(() => {
+        console.log('before')
+    })
+}, {
+    flush: 'post',
+    onTrigger(e) {
+        debugger
     }
 })
-let message2 = ref<string>("小试")
 
-watch([message, message2], (newVal, oldVal) => {
-    console.log(newVal, oldVal)
-}, {
-    deep: true //深度监听
-})
+const stopWatch = () => stop()
 </script>
 
 <style scoped></style>

@@ -535,7 +535,9 @@ reactive proxy 不能直接赋值 否则破坏响应式的对象： 解决方案
 <style scoped></style>
 ```
 
-## watch 监听数据源
+## vue3 响应式原理
+
+## watch 监听器
 
 需要侦听特定的数据源，并在单独的回调函数中执行副作用
 
@@ -547,10 +549,200 @@ reactive proxy 不能直接赋值 否则破坏响应式的对象： 解决方案
 //watch第三个参数一个options配置项是一个对象
 
 {
-  immediate: true; //是否立即调用一次
+  immediate: true; //是否立即调用一次，默认是false
 
   deep: true; //是否开启深度监听
+
+  flush: "pre"; //pre 组件更新前调用 sync 同步执行 post组件更新之后执行
 }
+```
+
+```html
+<template>
+  <div>
+    <input v-model="message" type="text" />
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { ref, watch } from "vue";
+  let message = ref<string>("测试");
+
+  watch(message, (newVal, oldVal) => {
+    console.log(newVal, oldVal);
+  });
+</script>
+```
+
+监听多个 ref 变成数组
+
+```html
+<script setup lang="ts">
+  import { ref, reactive, watch } from "vue";
+
+  let message1 = ref({
+    foo: {
+      bar: {
+        name: "测试",
+      },
+    },
+  });
+  let message = ref<string>("小试");
+
+  watch(
+    [message, message1],
+    (newVal, oldVal) => {
+      console.log(newVal, oldVal);
+    },
+    {
+      deep: true,
+    }
+  );
+</script>
+```
+
+监听 Reactive：使用 reactive 监听深层对象开启和不开启 deep 效果一样
+
+```html
+<script setup lang="ts">
+  import { ref, reactive, watch } from "vue";
+
+  let message1 = reactive({
+    foo: {
+      bar: {
+        name: "测试",
+      },
+    },
+  });
+  let message = ref<string>("小试");
+
+  watch([message, message1], (newVal, oldVal) => {
+    console.log(newVal, oldVal);
+  });
+</script>
+```
+
+监听 reactive 单一值
+
+```html
+<script setup lang="ts">
+  import { ref, reactive, watch } from "vue";
+
+  let message1 = reactive({
+    foo: {
+      bar: {
+        name: "测试",
+      },
+    },
+  });
+  let message = ref<string>("小试");
+
+  watch(
+    () => message1.foo.bar.name,
+    (newVal, oldVal) => {
+      console.log(newVal, oldVal);
+    }
+  );
+</script>
+```
+
+## watchEffect
+
+立即执行传入的一个函数，同时响应式追踪其依赖，并在其依赖变更时重新运行该函数。
+
+如果用到 message 就只会监听 message 就是用到几个监听几个 而且是非惰性 会默认调用一次
+
+```html
+<template>
+  <div>
+    <input type="text" v-model="message" name="" id="" />
+    <input type="text" v-model="message2" name="" id="" />
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { watchEffect, ref, reactive } from "vue";
+
+  let message = ref<string>("飞机");
+  let message2 = ref<string>("大炮");
+
+  watchEffect((oninavlidate) => {
+    console.log("message:", message.value, message2.value);
+    oninavlidate(() => {
+      console.log("before");
+    });
+  });
+</script>
+```
+
+- 清除副作用
+  就是在触发监听之前会调用一个函数可以处理你的逻辑例如防抖
+
+```html
+<template>
+  <div>
+    <input type="text" v-model="message" name="" id="ipt" />
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { watchEffect, ref, reactive } from "vue";
+
+  let message = ref<string>("飞机");
+
+  const stop = watchEffect(
+    (oninavlidate) => {
+      let ipt: HTMLInputElement = document.querySelector(
+        "#ipt"
+      ) as HTMLInputElement;
+      console.log(ipt);
+      oninavlidate(() => {
+        console.log("before");
+      });
+    },
+    {
+      flush: "post",
+    }
+  );
+
+  const stopWatch = () => stop();
+</script>
+```
+
+- 停止跟踪 watchEffect 返回一个函数 调用之后将停止更新
+
+```js
+const stop = watchEffect(
+  (oninavlidate) => {
+    console.log("message:", message.value, message2.value);
+    oninavlidate(() => {
+      console.log("before");
+    });
+  },
+  {
+    flush: "post",
+    onTrigger() {},
+  }
+);
+```
+
+onTrigger 可以帮助我们调试 watchEffect
+
+```js
+const stop = watchEffect(
+  (oninavlidate) => {
+    console.log("message:", message.value, message2.value);
+    oninavlidate(() => {
+      console.log("before");
+    });
+  },
+  {
+    flush: "post",
+    onTrigger(e) {
+      debugger;
+    },
+  }
+);
 ```
 
 https://xiaoman.blog.csdn.net/article/details/122792620

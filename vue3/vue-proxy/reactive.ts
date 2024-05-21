@@ -1,4 +1,4 @@
-import {track,trigger} from './effect'
+import {track,trigger} from './effet'
 export const reactive=<T extends object>(target:T)=>{
     return new Proxy(target,{
         get(target,key,receiver){
