@@ -682,6 +682,8 @@ reactive proxy 不能直接赋值 否则破坏响应式的对象： 解决方案
 <template>
   <div>
     <input type="text" v-model="message" name="" id="ipt" />
+    <input type="text" v-model="message2" name="" id="" />
+    <button @click="stopWatch">停止监听</button>
   </div>
 </template>
 
@@ -743,6 +745,252 @@ const stop = watchEffect(
     },
   }
 );
+```
+
+## 组件 生命周期
+
+- 引用组件
+
+```html
+<template>
+  <div>
+    <AB></AB>
+  </div>
+</template>
+
+<script setup lang="ts">
+  import AB from "./components/A.vue";
+</script>
+```
+
+- 生命周期
+  - beforeCreate created setup 语法糖模式没有这两个生命周期的 setup 去代替
+  - onBeforeMount 之前读不到 DOM onMounted 可以读取到 DOM
+  - onBeforeUpdate 获取的是更新之前的 DOM onUpdated 过去的是更新之后的 DOM
+
+```html
+<script setup lang="ts">
+  import {
+    ref,
+    reactive,
+    onBeforeMount,
+    onMounted,
+    onBeforeUpdate,
+    onUpdated,
+    onBeforeUnmount,
+    onUnmounted,
+    onRenderTracked,
+    onRenderTriggered,
+    getCurrentInstance,
+  } from "vue";
+
+  const instace = getCurrentInstance(); //获取生命周期的实例
+  console.log("setup", instace);
+
+  const str = ref<string>("测试");
+  const div = ref<HTMLDivElement>();
+
+  const change = () => {
+    str.value = "修改后的测试";
+  };
+
+  // 创建  创建之前
+  onBeforeMount(() => {
+    console.log("创建之前-------", div);
+  });
+
+  // 创建完成
+  onMounted(() => {
+    console.log("创建完成-------", div);
+  });
+
+  // 更新的钩子
+  onBeforeUpdate(() => {
+    console.log("更新组件之前-------", div.value?.innerText);
+  });
+
+  onUpdated(() => {
+    console.log("更新完成-------", div.value?.innerText);
+  });
+
+  // 销毁的钩子
+  onBeforeUnmount(() => {
+    console.log("销毁之前-------");
+  });
+
+  onUnmounted(() => {
+    console.log("销毁完成-------");
+  });
+
+  onRenderTracked((e) => {
+    console.log(e);
+  });
+
+  onRenderTriggered((e) => {
+    console.log(e);
+  });
+</script>
+```
+
+## BEM 框架 + layout 布局
+
+BEM 的意思就是块（block）、元素（element）、修饰符（modifier）
+
+```html
+<!--  例如 css类名:el-divider__inner  -->
+<div class="el-divider__inner"></div>
+
+<!-- 
+  el表示namespace（命名空间）
+  -（）表示block（块）
+  __（）双下划线表示element（元素）
+  -- 双-号表示modidier（修饰符）
+-->
+```
+
+## 父子组件传参
+
+- 父组件给子组件传参
+
+父组件通过 v-bind 绑定一个数据，子组件通过 defineProps 接收参数
+
+父组件
+
+```html
+<template>
+  <waterFall :title="name"></waterFall>
+</template>
+<script setup lang="ts">
+  import waterFall from "./components/water-fall.vue";
+  let name = "测试";
+</script>
+```
+
+子组件
+
+```html
+<template>
+  <div>子组件</div>
+  <div>值：{{ title }}</div>
+</template>
+
+<script setup lang="ts">
+  import { ref, reactive } from "vue";
+  // 接收父组件传过来的值 defineProps
+  const props = defineProps({
+    title: {
+      type: String,
+      default: "默认值",
+    },
+  });
+  console.log(props.title); // 其中title不能直接用 需要通过定义一个props来调用
+</script>
+```
+
+ts 特有定义默认值 withDefaults
+
+```html
+<template>
+  <div>子组件</div>
+  <div>值：{{ title }}</div>
+  <div>{{ arr }}</div>
+</template>
+
+<script setup lang="ts">
+  import { ref, reactive } from "vue";
+  // 接收父组件传过来的值 defineProps
+  // const props = defineProps<{
+  //     title: String,
+  //     arr: number[]
+  // }>()
+
+  // ts 特有定义默认值 withDefaults
+  withDefaults(
+    defineProps<{
+      title: String;
+      arr: number[];
+    }>(),
+    {
+      arr: () => [0],
+    }
+  );
+  // console.log(props.title)
+</script>
+```
+
+- 子组件给父组件传参数
+
+#### 1、通过 defineEmits 给父组件传值
+
+子组件
+
+```html
+<template>
+  <div>子组件</div>
+  <button @click="send">传递给父组件</button>
+</template>
+
+<script setup lang="ts">
+  import { ref, reactive } from "vue";
+
+  // 给父组件传值 defineEmits
+  const emit = defineEmits(["on-click"]);
+  // 通过ts写
+  const emit = defineEmits<{ (e: "on-click", name: string): void }>();
+  const send = () => {
+    emit("on-click", "子传父");
+  };
+</script>
+```
+
+父组件
+
+```html
+<template>
+  <div>父组件</div>
+  <hr />
+  <waterFall @on-click="getName"></waterFall>
+</template>
+
+<script setup lang="ts">
+  import { ref, reactive } from "vue";
+  import waterFall from "./components/water-fall.vue";
+  const getName = (name: string) => {
+    console.log(name);
+  };
+</script>
+```
+
+#### 2、通过 defineExpose 暴露给父组件
+
+子组件
+
+```html
+<script setup lang="ts">
+  defineExpose({
+    name: "暴露给父组件",
+    open: () => console.log("暴露方法"),
+  });
+</script>
+```
+
+父组件
+
+```html
+<template>
+  <waterFallVue ref="waterFall"></waterFallVue>
+</template>
+<script setup lang="ts">
+  import { ref, reactive, onMounted } from "vue";
+  import waterFallVue from "./components/water-fall.vue";
+  const waterFall = ref<InstanceType<typeof waterFallVue>>();
+  onMounted(() => {
+    if (waterFall.value) {
+      waterFall.value.open();
+      console.log(waterFall.value?.name);
+    }
+  });
+</script>
 ```
 
 https://xiaoman.blog.csdn.net/article/details/122792620

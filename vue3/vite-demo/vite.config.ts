@@ -7,4 +7,11 @@ export default defineConfig({
   server:{
     port:3011, //本地运行端口号
   },
+  css: {
+    preprocessorOptions: {
+        scss: {
+            additionalData: "@import './src/layout/bem.scss';"
+        }
+    }
+  }
 })
