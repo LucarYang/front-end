@@ -850,7 +850,7 @@ BEM 的意思就是块（block）、元素（element）、修饰符（modifier�
 
 ## 父子组件传参
 
-- 父组件给子组件传参
+### 父组件给子组件传参
 
 父组件通过 v-bind 绑定一个数据，子组件通过 defineProps 接收参数
 
@@ -918,7 +918,7 @@ ts 特有定义默认值 withDefaults
 </script>
 ```
 
-- 子组件给父组件传参数
+### 子组件给父组件传参数
 
 #### 1、通过 defineEmits 给父组件传值
 
@@ -992,5 +992,83 @@ ts 特有定义默认值 withDefaults
   });
 </script>
 ```
+
+## 全局组件，局部组件，递归组件
+
+### 全局组件
+
+组件使用频率非常高（table，Input，button，等）这些组件 几乎每个页面都在使用便可以封装成全局组件
+
+封装一个 Card 组件
+
+```html
+<template>
+  <div class="card">
+    <div class="card-header">
+      <div>标题</div>
+      <div>副标题</div>
+    </div>
+    <div v-if="content" class="card-content">{{ content }}</div>
+  </div>
+</template>
+
+<script setup lang="ts">
+  type Props = {
+    content: string;
+  };
+  defineProps<Props>();
+</script>
+
+<style scoped lang="scss">
+  .card {
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+
+    &:hover {
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    &-content {
+      padding: 10px;
+    }
+
+    &-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+  }
+</style>
+```
+
+在 mian.ts 引入 Card 组件跟随在 createApp(App) 后面 切记不能放到 mount 后面这是一个链式调用用
+
+```ts
+import { createApp } from "vue";
+import App from "./App.vue";
+
+import CardVue from "./components/Card.vue";
+
+export const app = createApp(App);
+
+app.component("Card", CardVue);
+app.mount("#app");
+```
+
+引用全局组件
+
+```html
+<template>
+  <div>
+    <Card></Card>
+  </div>
+</template>
+```
+
+### 递归组件
+
+##
 
 https://xiaoman.blog.csdn.net/article/details/122792620

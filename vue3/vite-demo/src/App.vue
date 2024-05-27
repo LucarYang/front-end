@@ -1,47 +1,50 @@
 <template>
 
-  <!-- <div class="xm-test">
-    aaa
-    <div class="xm-test__inner">el</div>
-    <div class="xm-test--success">test</div>
+  <div>
+    <TreeVue :data="data"></TreeVue>
+
   </div>
-  <a href="">111</a> -->
-  <!-- <Layout></Layout> -->
-  <div>父组件</div>
-  <hr>
-  <waterFallVue ref="waterFall"></waterFallVue>
+
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, onMounted } from 'vue'
-// import Layout from './Layout/index.vue'
-import waterFallVue from './components/water-fall.vue'
-
-const waterFall = ref<InstanceType<typeof waterFallVue>>()
-
-onMounted(() => {
-  console.log(waterFall.value?.name)
-  if (waterFall.value) {
-    waterFall.value.open()
+import { ref, reactive } from 'vue'
+import TreeVue from './components/Tree.vue'
+// import CardVue from './components/Card.vue'
+interface Tree {
+  name: string,
+  cheack: boolean,
+  children?: Tree[]
+}
+const data = reactive<Tree[]>([
+  {
+    name: '1',
+    cheack: false,
+    children: [{
+      name: '1-1',
+      cheack: false
+    }, {
+      name: '1-2',
+      cheack: true
+    }]
+  },
+  {
+    name: '2',
+    cheack: false
+  },
+  {
+    name: '3',
+    cheack: false,
+    children: [{
+      name: '3-1',
+      cheack: false,
+      children: [{
+        name: '3-1-2',
+        cheack: false
+      }]
+    }]
   }
-})
+])
 </script>
 
-<style lang="scss" scoped>
-#app {
-
-  @include bfc;
-}
-
-@include b(test) {
-  color: red;
-
-  @include e(inner) {
-    color: blue;
-  }
-
-  @include m(success) {
-    color: #678903;
-  }
-}
-</style>
+<style scoped></style>
