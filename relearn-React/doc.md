@@ -389,3 +389,296 @@ classnames 是一个简单的 JS 库，可以非常方便的 **通过条件动�
 ## 受控表单绑定
 
 概念：使用 React 组件的状态(useState)控制表单的状态
+```js
+import { useState } from "react";
+// 手控绑定表单
+// 1、声明一个React状态 -useState
+
+// 2、核心绑定流程
+// 1.通过value属性绑定React状态
+// 2.绑定onChange事件 通过时间参数e拿到输入框最新的值 反向修改到React状态
+
+function App() {
+  const [value, setValue] = useState("");
+  return (
+    <div className="App">
+      <input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        type="text"
+      ></input>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+### React中获取DOM
+
+在React中获取/操作DOM 需要使用useRef 钩子函数
+
+```js
+import { useRef } from "react";
+
+// 1、useRef生成Ref对象 绑定到DOM标签上去
+
+// 2、dem可用时 ref.current获取dom
+// 渲染完毕之后dom生成之后才可用
+function App() {
+  const inputRef = useRef(null)
+  const showDom=()=>{
+    console.dir(inputRef.current)
+  }
+  return (
+    <div className="App">
+      <input type="text" ref={inputRef}></input>
+      <button onClick={showDom}>获取</button>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+## 组件通信
+
+概念：组件通信就是 **组件之间的数据传递** ，根据组件嵌套关系的不同，有不同的通信方法。
+
+父子通信 兄弟通信 跨层通信
+
+### 父子通信
+
+实现步骤
+
+1. 父组件传递数据 - 在子组件标签上绑定属性
+2. 子组件接收数据 - 子组件通过props参数接收数据
+
+src/App.js
+
+```js
+// 父传子
+// 1. 父组件传递数据 - 在子组件标签上绑定属性
+// 2. 子组件接收数据 - 子组件通过props参数接收数据
+
+import { useRef } from "react";
+
+
+function Son(props) {
+  // props 对象里面 包含父组件传递过来的所有数据
+  console.log(props)
+  return <div>this is son {props.name}</div>
+}
+function App() {
+  const name = 'this is App name'
+  return (
+    <div className="App">
+      <Son name={name}></Son>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+#### 父传子props说明
+
+1. props可以传递任意数据：数组、字符串、数组、对象、布尔值、函数、JSX
+2. props是只读的对象；子组件只能读取props的数据，不能直接进行修改，父组件的数据只能父组件修改。
+
+```js
+import { useRef } from "react";
+
+
+function Son(props) {
+  // props 对象里面 包含父组件传递过来的所有数据
+  console.log(props)
+  return <div>this is son {props.name},JSX{props.child}</div>
+}
+function App() {
+  const name = 'this is App name'
+  return (
+    <div className="App">
+      <Son
+        name={name}
+        age={19}
+        isman={true}
+        list={['Math', 'English']}
+        obj={{ name: 'Tom' }}
+        cb={() => console.log('123')}
+        child={<span>this is porps span</span>}
+      />
+    </div>
+  );
+}
+
+export default App;
+```
+
+父传子 特殊的props children
+
+当把内容嵌套在子组件的标签中，父组件会自动在名为children的prop属性中接收该内容
+
+```js
+function Son(props) {
+  // props 对象里面 包含父组件传递过来的所有数据
+  console.log(props)
+  return <div>this is son,{props.children}</div>
+}
+function App() {
+  const name = 'this is App name'
+  return (
+    <div className="App">
+      <Son>
+        <span>this i span</span>
+      </Son>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### 子传父
+
+核心思路：在子组件中调用父组件中的函数并传递参数
+
+```js
+
+import {useState} from 'react'
+
+function Son({onGetSonMsg}) {
+  // Son组件中的数据
+  const sonMsg='this is son msg'
+  return(
+    <div>
+      this is son
+      <button onClick={()=>onGetSonMsg(sonMsg)}>sendMsg</button>
+    </div>
+  )
+}
+function App() {
+  const [msg, setMsg] = useState('')
+  const getMsg = (msg)=>{
+    console.log(msg)
+    setMsg(msg)
+  }
+  return (
+    <div className="App">
+      this is App,{msg}
+      <Son onGetSonMsg={getMsg}/>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+### 兄弟组件通信
+
+使用状态提升实现兄弟组件通信 -> 
+
+实现思路 -> 借助”状态提升“机制，通过父组件进行兄弟组件之间的数据传输
+
+1. A组件先通过子传父的方式把数据传给父组件APP
+2. APP拿到数据后通过父传子的方式传递给B组件
+
+```js
+// 1、通过子传父 A -> APP
+// 2、通过父传子 App -> B
+import {useState} from 'react'
+
+function A({onGetAName}){
+  const name='this i A name'
+  return(
+    <div>
+      this is A component
+      <button onClick={()=>onGetAName(name)}>send</button>
+    </div>
+  )
+}
+
+function B({name}){
+  return(
+    <div>
+      this is B component,{name}
+    </div>
+  )
+}
+function App() {
+
+  const [name,setName]=useState('')
+  const getAName=(name)=>{
+    console.log(name)
+    setName(name)
+  }
+  return (
+    <div className="App">
+      this is App
+      <A onGetAName={getAName}/>
+      <B name={name}/>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+### 跨层组件通信
+
+使用context机制跨层组件通信
+
+实现步骤 ->
+
+1. 使用createContext方法创建一个上线文的Ctx
+2. 在顶层组件(App)中通过Ctx.Provider 组件提供数据
+3. 在底层组件B中通过useContext钩子函数获取消费数据
+
+```js
+
+import { createContext, useContext } from 'react'
+
+// 1、createContext方法创建一个上下文对象
+const MsgContxt = createContext()
+
+// 2、在顶层组件 通过Provider组件提供数据
+
+// 3、在底层组件 通过useContext钩子函数使用数据
+function A() {
+  return (
+    <div>
+      this is A component
+      <B />
+    </div>
+  )
+}
+
+function B() {
+  const msg = useContext(MsgContxt)
+  return (
+    <div>
+      this is B component,{msg}
+    </div>
+  )
+}
+function App() {
+
+  const msg = 'this is App Msg'
+  return (
+    <div className="App">
+      <MsgContxt.Provider value={msg}>
+        this is App
+        <A />
+      </MsgContxt.Provider>
+    </div>
+  );
+}
+
+export default App;
+
+```
