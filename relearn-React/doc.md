@@ -389,6 +389,7 @@ classnames 是一个简单的 JS 库，可以非常方便的 **通过条件动�
 ## 受控表单绑定
 
 概念：使用 React 组件的状态(useState)控制表单的状态
+
 ```js
 import { useState } from "react";
 // 手控绑定表单
@@ -412,12 +413,11 @@ function App() {
 }
 
 export default App;
-
 ```
 
-### React中获取DOM
+## React 中获取 DOM
 
-在React中获取/操作DOM 需要使用useRef 钩子函数
+在 React 中获取/操作 DOM 需要使用 useRef 钩子函数
 
 ```js
 import { useRef } from "react";
@@ -427,10 +427,10 @@ import { useRef } from "react";
 // 2、dem可用时 ref.current获取dom
 // 渲染完毕之后dom生成之后才可用
 function App() {
-  const inputRef = useRef(null)
-  const showDom=()=>{
-    console.dir(inputRef.current)
-  }
+  const inputRef = useRef(null);
+  const showDom = () => {
+    console.dir(inputRef.current);
+  };
   return (
     <div className="App">
       <input type="text" ref={inputRef}></input>
@@ -440,7 +440,6 @@ function App() {
 }
 
 export default App;
-
 ```
 
 ## 组件通信
@@ -454,7 +453,7 @@ export default App;
 实现步骤
 
 1. 父组件传递数据 - 在子组件标签上绑定属性
-2. 子组件接收数据 - 子组件通过props参数接收数据
+2. 子组件接收数据 - 子组件通过 props 参数接收数据
 
 src/App.js
 
@@ -465,14 +464,13 @@ src/App.js
 
 import { useRef } from "react";
 
-
 function Son(props) {
   // props 对象里面 包含父组件传递过来的所有数据
-  console.log(props)
-  return <div>this is son {props.name}</div>
+  console.log(props);
+  return <div>this is son {props.name}</div>;
 }
 function App() {
-  const name = 'this is App name'
+  const name = "this is App name";
   return (
     <div className="App">
       <Son name={name}></Son>
@@ -481,34 +479,36 @@ function App() {
 }
 
 export default App;
-
 ```
 
-#### 父传子props说明
+#### 父传子 props 说明
 
-1. props可以传递任意数据：数组、字符串、数组、对象、布尔值、函数、JSX
-2. props是只读的对象；子组件只能读取props的数据，不能直接进行修改，父组件的数据只能父组件修改。
+1. props 可以传递任意数据：数组、字符串、数组、对象、布尔值、函数、JSX
+2. props 是只读的对象；子组件只能读取 props 的数据，不能直接进行修改，父组件的数据只能父组件修改。
 
 ```js
 import { useRef } from "react";
 
-
 function Son(props) {
   // props 对象里面 包含父组件传递过来的所有数据
-  console.log(props)
-  return <div>this is son {props.name},JSX{props.child}</div>
+  console.log(props);
+  return (
+    <div>
+      this is son {props.name},JSX{props.child}
+    </div>
+  );
 }
 function App() {
-  const name = 'this is App name'
+  const name = "this is App name";
   return (
     <div className="App">
       <Son
         name={name}
         age={19}
         isman={true}
-        list={['Math', 'English']}
-        obj={{ name: 'Tom' }}
-        cb={() => console.log('123')}
+        list={["Math", "English"]}
+        obj={{ name: "Tom" }}
+        cb={() => console.log("123")}
         child={<span>this is porps span</span>}
       />
     </div>
@@ -518,18 +518,18 @@ function App() {
 export default App;
 ```
 
-父传子 特殊的props children
+父传子 特殊的 props children
 
-当把内容嵌套在子组件的标签中，父组件会自动在名为children的prop属性中接收该内容
+当把内容嵌套在子组件的标签中，父组件会自动在名为 children 的 prop 属性中接收该内容
 
 ```js
 function Son(props) {
   // props 对象里面 包含父组件传递过来的所有数据
-  console.log(props)
-  return <div>this is son,{props.children}</div>
+  console.log(props);
+  return <div>this is son,{props.children}</div>;
 }
 function App() {
-  const name = 'this is App name'
+  const name = "this is App name";
   return (
     <div className="App">
       <Son>
@@ -547,104 +547,95 @@ export default App;
 核心思路：在子组件中调用父组件中的函数并传递参数
 
 ```js
+import { useState } from "react";
 
-import {useState} from 'react'
-
-function Son({onGetSonMsg}) {
+function Son({ onGetSonMsg }) {
   // Son组件中的数据
-  const sonMsg='this is son msg'
-  return(
+  const sonMsg = "this is son msg";
+  return (
     <div>
       this is son
-      <button onClick={()=>onGetSonMsg(sonMsg)}>sendMsg</button>
+      <button onClick={() => onGetSonMsg(sonMsg)}>sendMsg</button>
     </div>
-  )
+  );
 }
 function App() {
-  const [msg, setMsg] = useState('')
-  const getMsg = (msg)=>{
-    console.log(msg)
-    setMsg(msg)
-  }
+  const [msg, setMsg] = useState("");
+  const getMsg = (msg) => {
+    console.log(msg);
+    setMsg(msg);
+  };
   return (
     <div className="App">
       this is App,{msg}
-      <Son onGetSonMsg={getMsg}/>
+      <Son onGetSonMsg={getMsg} />
     </div>
   );
 }
 
 export default App;
-
 ```
 
 ### 兄弟组件通信
 
-使用状态提升实现兄弟组件通信 -> 
+使用状态提升实现兄弟组件通信 ->
 
 实现思路 -> 借助”状态提升“机制，通过父组件进行兄弟组件之间的数据传输
 
-1. A组件先通过子传父的方式把数据传给父组件APP
-2. APP拿到数据后通过父传子的方式传递给B组件
+1. A 组件先通过子传父的方式把数据传给父组件 APP
+2. APP 拿到数据后通过父传子的方式传递给 B 组件
 
 ```js
 // 1、通过子传父 A -> APP
 // 2、通过父传子 App -> B
-import {useState} from 'react'
+import { useState } from "react";
 
-function A({onGetAName}){
-  const name='this i A name'
-  return(
+function A({ onGetAName }) {
+  const name = "this i A name";
+  return (
     <div>
       this is A component
-      <button onClick={()=>onGetAName(name)}>send</button>
+      <button onClick={() => onGetAName(name)}>send</button>
     </div>
-  )
+  );
 }
 
-function B({name}){
-  return(
-    <div>
-      this is B component,{name}
-    </div>
-  )
+function B({ name }) {
+  return <div>this is B component,{name}</div>;
 }
 function App() {
-
-  const [name,setName]=useState('')
-  const getAName=(name)=>{
-    console.log(name)
-    setName(name)
-  }
+  const [name, setName] = useState("");
+  const getAName = (name) => {
+    console.log(name);
+    setName(name);
+  };
   return (
     <div className="App">
       this is App
-      <A onGetAName={getAName}/>
-      <B name={name}/>
+      <A onGetAName={getAName} />
+      <B name={name} />
     </div>
   );
 }
 
 export default App;
-
 ```
 
 ### 跨层组件通信
 
-使用context机制跨层组件通信
+使用 context 机制跨层组件通信
 
 实现步骤 ->
 
-1. 使用createContext方法创建一个上线文的Ctx
-2. 在顶层组件(App)中通过Ctx.Provider 组件提供数据
-3. 在底层组件B中通过useContext钩子函数获取消费数据
+1. 使用 createContext 方法创建一个上线文的 Ctx
+2. 在顶层组件(App)中通过 Ctx.Provider 组件提供数据
+3. 在底层组件 B 中通过 useContext 钩子函数获取消费数据
 
 ```js
-
-import { createContext, useContext } from 'react'
+import { createContext, useContext } from "react";
 
 // 1、createContext方法创建一个上下文对象
-const MsgContxt = createContext()
+const MsgContxt = createContext();
 
 // 2、在顶层组件 通过Provider组件提供数据
 
@@ -655,20 +646,15 @@ function A() {
       this is A component
       <B />
     </div>
-  )
+  );
 }
 
 function B() {
-  const msg = useContext(MsgContxt)
-  return (
-    <div>
-      this is B component,{msg}
-    </div>
-  )
+  const msg = useContext(MsgContxt);
+  return <div>this is B component,{msg}</div>;
 }
 function App() {
-
-  const msg = 'this is App Msg'
+  const msg = "this is App Msg";
   return (
     <div className="App">
       <MsgContxt.Provider value={msg}>
@@ -680,5 +666,211 @@ function App() {
 }
 
 export default App;
-
 ```
+
+## useEffect
+
+useEffect 是一个 ReactHook 函数，用于在 React 组件中创建不是由一个时间引起而是 **由渲染本身引起的操作**，比如发送 Ajax 请求，更改 DOM 等
+
+```js
+useEffect(() => {}, []);
+```
+
+参数 1 是一个函数，可以把它叫做副作用函数，在函数内部可以放置要执行的造作
+
+参数 2 是一个数组，在数组里放置依赖项，不同依赖项会影响第一个参数函数的执行， **当是一个空数组的时候，副作用函数只会在数组渲染完毕之后执行一次**
+
+```js
+import { useEffect, useState } from "react";
+
+const URL = "http://geek.itheima.net/v1_0/channels";
+
+function App() {
+  // 创建一个状态数据
+  const [list, setList] = useState([]);
+  useEffect(() => {
+    // 额外的操作 获取频道列表
+    async function getList() {
+      const res = await fetch(URL);
+      const jsonRes = await res.json();
+      console.log(jsonRes);
+      setList(jsonRes.data.channels);
+    }
+    getList();
+  }, []);
+  return (
+    <div className="App">
+      this is app
+      {list.map((item, index) => (
+        <li key={index}>{item.name}</li>
+      ))}
+    </div>
+  );
+}
+
+export default App;
+```
+
+### useEffect 依赖项参数说明
+
+useEffect 副作用函数的执行实际存在多种情况，根据传入依赖项的不同，会有不同的执行表现
+|依赖项|副作用函数的执行时机|
+|-|-|
+|没有依赖性|组件初始渲染+组将跟新的执行|
+|空依赖项|只在初始渲染时执行一次|
+|添加特定依赖项|组件初始渲染+特性依赖项变化时执行|
+
+```js
+import { useEffect, useState } from "react";
+
+function App() {
+  // 1、没有依赖项 初始+组件更新
+  const [count, setCount] = useState(0);
+  // useEffect(() => {
+  //   console.log("副作用函数执行了");
+  // });
+
+  // 2、传入一个空数组依赖
+  // useEffect(() => {
+  //   console.log("副作用函数执行了");
+  // }, []);
+
+  // 3、传入的特点的依赖项 初始+依赖项变化时执行
+  useEffect(() => {
+    console.log("副作用函数执行了");
+  }, [count]);
+  return (
+    <div className="App">
+      this is app
+      <button onClick={() => setCount(count + 1)}>{count}</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### useEffect 清除副作用
+
+在 useEffect 中编写的 **由渲染本身引起的对接组件外部的操作**，社区也通常叫它 **副作用操作**，比如 uesEffect 中开启一个定时器，我们想在组件卸载时把这个定时器在清理掉，这个过程就是清楚副作用
+
+```js
+useEffect(() => {
+  // 实现副作用操作逻辑
+  return () => {
+    // 清除副作用逻辑
+  };
+}, []);
+```
+
+说明：清楚副作用的函数**最常见**的执行时机是在**组件卸载是自动执行**
+
+```js
+import { useEffect, useState } from "react";
+
+function Son() {
+  // 1、渲染时开启一个定时器
+  useEffect(() => {
+    const timer = setInterval(() => {
+      console.log("定时器执行中ing");
+    }, 1000);
+    return () => {
+      // 清除副作用(组件卸载)
+      clearInterval(timer);
+    };
+  }, []);
+  return <div>this is Son</div>;
+}
+function App() {
+  //  通过条件渲染模拟组件卸载
+  const [show, setShow] = useState(true);
+  return (
+    <div className="App">
+      {show && <Son />}
+      <button onClick={() => setShow(false)}>卸载son组件</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## Hook
+
+### 自定义 Hook 函数
+
+概念 自定义 Hook 是以 **use 开头的函数**，通过自定义 Hook 函数可以用来实现**逻辑的封装和复用**
+
+```js
+// 问题：布尔切换的逻辑 和当前组件是耦合在一起的 不方便复用
+
+// 解决思路 自定义Hook函数
+import { useEffect, useState } from "react";
+
+function useToggle() {
+  //可复用的逻辑代码
+  const [value, setValue] = useState(true);
+
+  const toggle = () => setValue(!value);
+
+  // 哪些状态和回调函数需要在其他组件中调用 return
+  return {
+    value,
+    toggle,
+  };
+}
+
+// 封装自定义Hook通用思路：
+// 1、声明一个以use开头的函数
+// 2、在函数体内封装可复用的逻辑(只要是可复用的逻辑)
+// 3、把组件中用到的状态或者回调return出去(以对象或者数组)
+// 4、在哪个组件中要用到这个逻辑，就执行这个函数，解构出状态和回调进行使用
+
+function App() {
+  //布尔切换逻辑
+  // const [value, setValue] = useState(true);
+  // const toggle = () => setValue(!value);
+
+  // 自定义Hook函数
+  const { value, toggle } = useToggle();
+  return (
+    <div className="App">
+      {value && <div>this is div</div>}
+      <button onClick={toggle}>toggle</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### React Hooks 使用规则
+
+1. 只能在组件中或者其他自定义 Hook 函数中使用
+2. 只能在组件中顶层调用，不能嵌套在 if、for、其他函数中
+
+```js
+import { useEffect, useState } from "react";
+
+// useState()
+function App() {
+  if (true) {
+    // useState();
+  }
+  return <div className="App"></div>;
+}
+
+export default App;
+```
+
+## Redux
+
+Redux 是 React 常用的 **集中状态管理工具** 类似于 Vue 中的 Pinia(Vuex),可以独立于框架
+
+作用：通过集中的管理方式管理应用的状态
+
+1. 定义一个 **reducer** 函数(根据当前想要做的修改返回一个新的状态)
+2. 使用 createStore 方法传入 reducer 函数生成一个 **store 实例对象**
+3. 使用 store 实例的 **subscribe 方法**订阅数据变化(数据一旦变化，可以得到通知)
+4. 使用 store 实例的 **deispath 方法提交 action 对象** 触发数据变化(告诉 reducer 你想怎么改数据)
+5. 使用 store 实例的 **getState 方法**获取最新的状态数据更新到视图中

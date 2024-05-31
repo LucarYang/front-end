@@ -1,11 +1,11 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.scss";
 import avatar from "./images/bozai.png";
 import _ from "lodash";
 import classnames from "classnames";
 import { v4 as v4uuid } from "uuid";
-import dayjs from 'dayjs'
-
+import dayjs from "dayjs";
+import axios from "axios";
 
 /**
  * 评论列表的渲染和操作
@@ -79,13 +79,70 @@ const tabs = [
   { type: "time", text: "最新" },
 ];
 
+// 封装请求数据的Hook
+function useGetList() {
+  // 获取接口数据渲染
+  const [commentList, setCommentList] = useState([]);
+
+  useEffect(() => {
+    // 请求数据
+    async function geList() {
+      //axios请求数据
+      const res = await axios.get("http://localhost:3004/list");
+      setCommentList(res.data);
+    }
+    geList();
+  }, []);
+  return {
+    commentList,
+    setCommentList,
+  };
+}
+
+// 封装一个item组件
+function Item({ item, onDel }) {
+  return (
+    <div className="reply-item">
+      {/* 头像 */}
+      <div className="root-reply-avatar">
+        <div className="bili-avatar">
+          <img className="bili-avatar-img" alt="" src={item.user.avatar} />
+        </div>
+      </div>
+
+      <div className="content-wrap">
+        {/* 用户名 */}
+        <div className="user-info">
+          <div className="user-name">{item.user.uname}</div>
+        </div>
+        {/* 评论内容 */}
+        <div className="root-reply">
+          <span className="reply-content">{item.content}</span>
+          <div className="reply-info">
+            {/* 评论时间 */}
+            <span className="reply-time">{item.ctime}</span>
+            {/* 评论数量 */}
+            <span className="reply-time">点赞数:{item.like}</span>
+            {user.uid === item.user.uid && (
+              // <span className="delete-btn" onClick={() => handleDel(item.rpid)}>
+              <span className="delete-btn" onClick={() => onDel(item.rpid)}>
+                删除
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const App = () => {
   // 渲染评论列表
   // 1、使用useState维护list
-  const [commentList, setCommentList] = useState(
-    _.orderBy(list, "like", "desc")
-  );
-
+  // const [commentList, setCommentList] = useState(
+  //   _.orderBy(list, "like", "desc")
+  // );
+  const { commentList, setCommentList } = useGetList();
   // 删除
   const handleDel = (id) => {
     console.log(id);
@@ -110,10 +167,10 @@ const App = () => {
   };
 
   // 发表评论
-  const [conten, setConten] = useState('')
-  const inputRef =useRef(null)
+  const [conten, setConten] = useState("");
+  const inputRef = useRef(null);
   const handelPulish = () => {
-    console.log(inputRef.current.value)
+    console.log(inputRef.current.value);
     setCommentList([
       ...commentList,
       {
@@ -124,16 +181,16 @@ const App = () => {
           uname: "黑马前端",
         },
         content: conten,
-        ctime: dayjs(new Date()).format('MM-DD HH:mm'),
+        ctime: dayjs(new Date()).format("MM-DD HH:mm"),
         like: 100,
-      }
-    ])
+      },
+    ]);
     // 1、清空输入框内容
-    inputRef.current.value=''
+    // inputRef.current.value = "";
+    setConten("");
     // 2、重新聚焦 dom-focus
-    inputRef.current.focus()
-  }
-
+    inputRef.current.focus();
+  };
 
   return (
     <div className="app">
@@ -183,7 +240,9 @@ const App = () => {
             />
             {/* 发布按钮 */}
             <div className="reply-box-send">
-              <div className="send-text" onClick={handelPulish}>发布</div>
+              <div className="send-text" onClick={handelPulish}>
+                发布
+              </div>
             </div>
           </div>
         </div>
@@ -191,39 +250,7 @@ const App = () => {
         <div className="reply-list">
           {/* 评论项 */}
           {commentList.map((item, index) => (
-            <div key={index} className="reply-item">
-              {/* 头像 */}
-              <div className="root-reply-avatar">
-                <div className="bili-avatar">
-                  <img className="bili-avatar-img" alt="" src={item.avatar} />
-                </div>
-              </div>
-
-              <div className="content-wrap">
-                {/* 用户名 */}
-                <div className="user-info">
-                  <div className="user-name">{item.user.uname}</div>
-                </div>
-                {/* 评论内容 */}
-                <div className="root-reply">
-                  <span className="reply-content">{item.content}</span>
-                  <div className="reply-info">
-                    {/* 评论时间 */}
-                    <span className="reply-time">{item.ctime}</span>
-                    {/* 评论数量 */}
-                    <span className="reply-time">点赞数:{item.like}</span>
-                    {user.uid === item.user.uid && (
-                      <span
-                        className="delete-btn"
-                        onClick={() => handleDel(item.rpid)}
-                      >
-                        删除
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Item key={index} item={item} onDel={handleDel} />
           ))}
         </div>
       </div>
