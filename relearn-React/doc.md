@@ -1384,9 +1384,10 @@ const Login = () => {
 export default Login;
 ```
 
-#### 导航传参
+### 路由导航传参
 
-- searchParems 传参
+#### searchParems 传参
+
   src/page/Login/Index.js
 
 ```js
@@ -1426,7 +1427,8 @@ const Article = () => {
 export default Article;
 ```
 
-- params 传参
+#### params 传参
+
   src/page/Login/Index.js
 
 ```js
@@ -1480,8 +1482,44 @@ const Article = () => {
 export default Article;
 ```
 
+### 嵌套路由配置
+
+在一级路由中又嵌套了其他路由，这种关系叫做嵌套路由，嵌套至一级路由内的路由又称作二级路由，以此类推，三级路由、四级路由……
+
+嵌套路由配置：
+
+1. 使用children属性配置配置路由嵌套关系
+2. 使用`Outlet`组件配置二级路由渲染位置
+
+src/router/index.js
+
+```js
+
+import Layout from "../page/Layout";
+import Board from "../page/Board";
+import About from "../page/About";
+
+import { createBrowserRouter } from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path:'/',
+    element:<Layout/>,
+    children:[
+      {
+        path:'baord',
+        element:<Board/>
+      },
+      {
+        path:'about',
+        element:<About/>
+      },
+    ]
+  },
+]);
+
+export default router;
+
+```
+
 # END
-
-```
-
-```
