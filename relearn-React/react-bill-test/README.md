@@ -148,3 +148,47 @@ const router = createBrowserRouter([
 ]);
 export default router;
 ```
+
+# antD-mobile 主题定制
+
+定制方案
+
+1. 全局定制
+   整个应用范围内的组件都生效
+2. 局部定制
+   只在某些元素内部的组件生效
+
+```css
+/* 全局样式定制 */
+:root:root {
+  --adm-color-primary: rgb(105, 174, 120);
+}
+
+/* 局部样式定制 */
+/* .puple{
+    --adm-color-primary:#a062d4;
+} */
+```
+
+src\pages\Layout\index.js
+
+```js
+import { Button } from "antd-mobile";
+import { Outlet } from "react-router-dom";
+
+const Layout = () => {
+  return (
+    <div>
+      <Outlet />
+      Layout页面
+      {/* 测试全局生效样式 */}
+      <Button color="primary">测试全局</Button>
+      <div className="puple">
+        <Button color="primary">测试局部</Button>
+      </div>
+    </div>
+  );
+};
+
+export default Layout;
+```
