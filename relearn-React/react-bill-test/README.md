@@ -276,7 +276,7 @@ export default Layout;
 
 # 月度账单 - 统计区域
 
-搭建静态页面
+## 搭建静态页面
 
 ```js
 import { NavBar, DatePicker } from "antd-mobile";
@@ -325,4 +325,74 @@ const Month = () => {
 };
 
 export default Month;
+```
+
+## 切换时间框
+
+> 实现思路：
+>
+> 1. 准备一个状态数据
+> 2. 点击切换状态
+> 3. 根据状态控制弹框打开关闭以及箭头样式
+
+```js
+import { NavBar, DatePicker } from "antd-mobile";
+import "./index.scss";
+import { useState } from "react";
+import classNames from 'classnames';
+
+
+const Month = () => {
+  // 控制弹框的打开和关闭
+  const [dateVisible,setDateVidible]=useState(false)
+  const onConfirm=()=>{
+    setDateVidible(false)
+  }
+  return (
+    <div className="monthlyBill">
+      <NavBar className="nav" backArrow={false}>
+        月度收支
+      </NavBar>
+      <div className="content">
+        <div className="header">
+          {/* 时间切换区域 */}
+          <div className="date" onClick={()=>setDateVidible(true)}>
+            <span className="text">2023 | 3月账单</span>
+            {/* 思路：根据弹框的状态控制 expand类名是否存在 */}
+            <span className={classNames('arrow',dateVisible && 'expand')}></span>
+          </div>
+          {/* 统计区域 */}
+          <div className="twoLineOverview">
+            <div className="item">
+              <span className="money">{100}</span>
+              <span className="type">支出</span>
+            </div>
+            <div className="item">
+              <span className="money">{200}</span>
+              <span className="type">收入</span>
+            </div>
+            <div className="item">
+              <span className="money">{200}</span>
+              <span className="type">结余</span>
+            </div>
+          </div>
+          {/* 时间选择器 */}
+          <DatePicker
+            className="kaDate"
+            title="记账日期"
+            precision="month"
+            visible={dateVisible}
+            onCancel={()=>setDateVidible(false)}
+            onConfirm={onConfirm}
+            onClose={()=>setDateVidible(false)}
+            max={new Date()}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Month;
+
 ```
