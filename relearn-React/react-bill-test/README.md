@@ -205,3 +205,7 @@ RTK：
 
 component:
 dispatch 异步 action
+
+# TabBar 功能实现
+
+使用 antD 的 TabBar 标签栏组件进行布局以及路由的切换
