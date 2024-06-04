@@ -192,3 +192,16 @@ const Layout = () => {
 
 export default Layout;
 ```
+
+# Redux 管理账目别表
+
+基于 RTK 管理账目列表
+
+RTK：
+
+- 数据状态定义 state-billList
+- 同步方法定义 reducer-setBillList
+- 异步方法定义 异步 action
+
+component:
+dispatch 异步 action
