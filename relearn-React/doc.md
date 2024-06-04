@@ -1120,7 +1120,7 @@ reportWebVitals();
 
 在 React 组件中使用 store 中的数据，需要用到一个钩子函数 -useSeletor,它的作用是把 store 中的数据映射到组件中
 
-src/App.js
+src\App.js
 
 ```js
 import { useSelector } from "react-redux";
@@ -1136,7 +1136,7 @@ export default App;
 ### React 组件中修改 store 中的数据
 
 React 组件中修改 store 的数据需要借助另一个 hook 函数 -useDispatch，它的作用是生成提交 action 对象的 dispatch 函数
-src/App.js
+src\App.js
 
 ```js
 import { useSelector, useDispatch } from "react-redux";
@@ -1165,7 +1165,7 @@ export default App;
 
 在 reducers 的同步修改方法中**添加 action 对象参数**，在**调用 actionCreater 的时候传递参数**，参数会被传递到**action 对象 payload 属性**上
 
-src/store/module/counterStore.js
+src\store\module\counterStore.js
 
 ```js
 const counterStore = createSlice({
@@ -1183,7 +1183,7 @@ const { inscrement, descrement, addToNum } = counterStore.actions;
 export { inscrement, descrement, addToNum };
 ```
 
-src/App.js
+src\App.js
 
 ```js
 //...
@@ -1241,7 +1241,7 @@ npm i react-router-dom
 npm run start
 ```
 
-src/index.js
+src\index.js
 
 ```js
 import React from "react";
@@ -1278,7 +1278,7 @@ reportWebVitals();
 
 ### 抽象路由模块
 
-src/page/Login/Index.js
+src\page\Login\Index.js
 
 ```js
 const Login = () => {
@@ -1288,7 +1288,7 @@ const Login = () => {
 export default Login;
 ```
 
-src/router/Index.js
+src\router\Index.js
 
 ```js
 import Login from "../page/Login/Index";
@@ -1309,7 +1309,7 @@ const router = createBrowserRouter([
 export default router;
 ```
 
-src/index.js
+src\index.js
 
 ```js
 import React from "react";
@@ -1344,7 +1344,7 @@ reportWebVitals();
 
 语法说明：通过给组合的 to 属性指定要跳转到路由 path，组件会被渲染为浏览器支持的 a 链接，如果需要传参直接通过字符串拼接的方式拼接参数即可
 
-src/page/Login/Index.js
+src\page\Login\Index.js
 
 ```js
 import { Link } from "react-router-dom";
@@ -1365,7 +1365,7 @@ export default Login;
 
 编程式导航是指通过`useNavigate`钩子得导导航方法，然后通过调用方法以命令的形式进行路由跳转
 
-src/page/Login/Index.js
+src\page\Login\Index.js
 
 ```js
 import { useNavigate } from "react-router-dom";
@@ -1388,7 +1388,7 @@ export default Login;
 
 #### searchParems 传参
 
-  src/page/Login/Index.js
+src\page\Login\Index.js
 
 ```js
 import { useNavigate } from "react-router-dom";
@@ -1408,7 +1408,7 @@ const Login = () => {
 export default Login;
 ```
 
-src/page/Article/Index.js
+src\page\Article\Index.js
 
 ```js
 import { useSearchParams } from "react-router-dom";
@@ -1429,7 +1429,7 @@ export default Article;
 
 #### params 传参
 
-  src/page/Login/Index.js
+src\page\Login\Index.js
 
 ```js
 import { useNavigate } from "react-router-dom";
@@ -1462,7 +1462,7 @@ const router = createBrowserRouter([
 ]);
 ```
 
-src/page/Article/Index.js
+src\page\Article\Index.js
 
 ```js
 import { useParams } from "react-router-dom";
@@ -1488,13 +1488,12 @@ export default Article;
 
 嵌套路由配置：
 
-1. 使用children属性配置配置路由嵌套关系
+1. 使用 children 属性配置配置路由嵌套关系
 2. 使用`Outlet`组件配置二级路由渲染位置
 
-src/router/index.js
+src\router\index.js
 
 ```js
-
 import Layout from "../page/Layout";
 import Board from "../page/Board";
 import About from "../page/About";
@@ -1503,23 +1502,130 @@ import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
-    path:'/',
-    element:<Layout/>,
-    children:[
+    path: "/",
+    element: <Layout />,
+    children: [
       {
-        path:'baord',
-        element:<Board/>
+        path: "baord",
+        element: <Board />,
       },
       {
-        path:'about',
-        element:<About/>
+        path: "about",
+        element: <About />,
       },
-    ]
+    ],
   },
 ]);
 
 export default router;
+```
+
+src\page\Layout\index.js
+
+```js
+import { Outlet, Link } from "react-router-dom";
+const Layout = () => {
+  return (
+    <div>
+      一级路由layout
+      <Link to="/baord">面板</Link>
+      <Link to="/about">关于</Link>
+      <Outlet />
+    </div>
+  );
+};
+
+export default Layout;
+```
+
+src\page\Board\index.js
+
+```js
+const Board = () => {
+  return <div> 二级路由 Board</div>;
+};
+
+export default Board;
+```
+
+### 默认路由配置
+
+当访问的是一级路由时，默认的二级路由组件可以得到渲染，只需要在二级路由的位置**去掉 path，设置 index 属性为 true**
+
+src\router\index.js
+
+```js
+//...
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        // path:'baord',
+        index: true, //设置默认二级路由
+        element: <Board />,
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+    ],
+  },
+  //...
+]);
+```
+
+```js
 
 ```
+
+### 404 路由配置
+
+src\page\NotFound\index.js
+
+```js
+const NotFount = () => {
+  return <div>404</div>;
+};
+export default NotFount;
+```
+
+在路由底部添加 404 页面兜底
+
+src\router\index.js
+
+```js
+//...
+import NotFount from "../page/NotFound";
+
+import { createBrowserRouter } from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    //...
+  },
+  {
+    //...
+  },
+  {
+    //...
+  },
+  {
+    path: "*",
+    element: <NotFount />,
+  },
+]);
+
+export default router;
+```
+
+### 两种路由模式
+
+各种主流框架的路由常用的路由模式有两种，history 模式和 hash 模式,ReactRouter 分别由 CreateBrowerRouter 和 CreaeHashRouter 函数扶着创建
+|路由模式|url 表示|底层原理|是否需要后端支持|
+|-|-|-|-|
+|history|url/login|history 对象+pushState 事件|需要|
+|hash|url/#/login|监听 hashChange 事件|不需要|
 
 # END

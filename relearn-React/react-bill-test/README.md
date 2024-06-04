@@ -115,3 +115,36 @@ json-server 是一个 node 包，可以在不到 30 秒内获取得零编码的�
 4. 访问接口进行测试
 
 # 整体路由设计
+
+src\router\index.js
+
+```js
+// 创建路由实例 绑定path element
+import Layout from "@/pages/Layout";
+import Month from "@/pages/Month";
+import New from "@/pages/New";
+import Year from "@/pages/Year";
+import { createBrowserRouter } from "react-router-dom";
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        // path: "month",
+        index: true,
+        element: <Month />,
+      },
+      {
+        path: "year",
+        element: <Year />,
+      },
+    ],
+  },
+  {
+    path: "/new",
+    element: <New />,
+  },
+]);
+export default router;
+```
