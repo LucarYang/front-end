@@ -854,4 +854,295 @@ return (
 //...
 ```
 
-# 新增账单
+# 记账功能
+
+## 记账 - 结构渲染
+
+```jsx
+import { Button, DatePicker, Input, NavBar } from "antd-mobile";
+import Icon from "@/components/Icon";
+import "./index.scss";
+import classNames from "classnames";
+import { billListData } from "@/contants";
+import { useNavigate } from "react-router-dom";
+
+const New = () => {
+  const navigate = useNavigate();
+  return (
+    <div className="keepAccounts">
+      <NavBar className="nav" onBack={() => navigate(-1)}>
+        记一笔
+      </NavBar>
+
+      <div className="header">
+        <div className="kaType">
+          <Button shape="rounded" className={classNames("selected")}>
+            支出
+          </Button>
+          <Button className={classNames("")} shape="rounded">
+            收入
+          </Button>
+        </div>
+
+        <div className="kaFormWrapper">
+          <div className="kaForm">
+            <div className="date">
+              <Icon type="calendar" className="icon" />
+              <span className="text">{"今天"}</span>
+              <DatePicker
+                className="kaDate"
+                title="记账日期"
+                max={new Date()}
+              />
+            </div>
+            <div className="kaInput">
+              <Input className="input" placeholder="0.00" type="number" />
+              <span className="iconYuan">¥</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="kaTypeList">
+        {billListData["pay"].map((item) => {
+          return (
+            <div className="kaType" key={item.type}>
+              <div className="title">{item.name}</div>
+              <div className="list">
+                {item.list.map((item) => {
+                  return (
+                    <div className={classNames("item", "")} key={item.type}>
+                      <div className="icon">
+                        <Icon type={item.type} />
+                      </div>
+                      <div className="text">{item.name}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="btns">
+        <Button className="btn save">保 存</Button>
+      </div>
+    </div>
+  );
+};
+
+export default New;
+```
+
+配套样式
+
+```css
+.keepAccounts {
+  --ka-bg-color: #daf2e1;
+  --ka-color: #69ae78;
+  --ka-border-color: #191d26;
+
+  height: 100%;
+  background-color: var(--ka-bg-color);
+
+  .nav {
+    --adm-font-size-10: 16px;
+    color: #121826;
+    background-color: transparent;
+    &::after {
+      height: 0;
+    }
+
+    .adm-nav-bar-back-arrow {
+      font-size: 20px;
+    }
+  }
+
+  .header {
+    height: 132px;
+
+    .kaType {
+      padding: 9px 0;
+      text-align: center;
+
+      .adm-button {
+        --adm-font-size-9: 13px;
+
+        &:first-child {
+          margin-right: 10px;
+        }
+      }
+      .selected {
+        color: #fff;
+        --background-color: var(--ka-border-color);
+      }
+    }
+
+    .kaFormWrapper {
+      padding: 10px 22.5px 20px;
+
+      .kaForm {
+        display: flex;
+        padding: 11px 15px 11px 12px;
+        border: 0.5px solid var(--ka-border-color);
+        border-radius: 9px;
+        background-color: #fff;
+
+        .date {
+          display: flex;
+          align-items: center;
+          height: 28px;
+          padding: 5.5px 5px;
+          border-radius: 4px;
+          // color: #4f825e;
+          color: var(--ka-color);
+          background-color: var(--ka-bg-color);
+
+          .icon {
+            margin-right: 6px;
+            font-size: 17px;
+          }
+          .text {
+            font-size: 16px;
+          }
+        }
+
+        .kaInput {
+          flex: 1;
+          display: flex;
+          align-items: center;
+
+          .input {
+            flex: 1;
+            margin-right: 10px;
+            --text-align: right;
+            --font-size: 24px;
+            --color: var(--ka-color);
+            --placeholder-color: #d1d1d1;
+          }
+
+          .iconYuan {
+            font-size: 24px;
+          }
+        }
+      }
+    }
+  }
+
+  .container {
+  }
+  .kaTypeList {
+    height: 490px;
+    padding: 20px 11px;
+    padding-bottom: 70px;
+    overflow-y: scroll;
+    background: #ffffff;
+    border-radius: 20px 20px 0 0;
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+      display: none; /* Safari and Chrome */
+    }
+
+    .kaType {
+      margin-bottom: 25px;
+      font-size: 12px;
+      color: #333;
+
+      .title {
+        padding-left: 5px;
+        margin-bottom: 5px;
+        font-size: 13px;
+        color: #808080;
+      }
+      .list {
+        display: flex;
+
+        .item {
+          width: 65px;
+          height: 65px;
+          padding: 9px 0;
+          margin-right: 7px;
+          text-align: center;
+          border: 0.5px solid #fff;
+          &:last-child {
+            margin-right: 0;
+          }
+
+          .icon {
+            height: 25px;
+            line-height: 25px;
+            margin-bottom: 5px;
+            font-size: 25px;
+          }
+        }
+        .item.selected {
+          border: 0.5px solid var(--ka-border-color);
+          border-radius: 5px;
+          background: var(--ka-bg-color);
+        }
+      }
+    }
+  }
+
+  .btns {
+    position: fixed;
+    bottom: 15px;
+    width: 100%;
+    text-align: center;
+
+    .btn {
+      width: 200px;
+      --border-width: 0;
+      --background-color: #fafafa;
+      --text-color: #616161;
+      &:first-child {
+        margin-right: 15px;
+      }
+    }
+    .btn.save {
+      --background-color: var(--ka-bg-color);
+      --text-color: var(--ka-color);
+    }
+  }
+}
+```
+
+## 记账 - 支出和收入切换
+
+```jsx
+const new = ()=>{
+  // 1. 区分账单状态
+  const [billType, setBillType] = useState('income')
+  return (
+     <div className="keepAccounts">
+      <div className="kaType">
+        {/* 2. 点击切换状态 */}
+        <Button
+          shape="rounded"
+          className={classNames(billType==='pay'?'selected':'')}
+          onClick={() => setBillType('pay')}
+        >
+          支出
+        </Button>
+        <Button
+          className={classNames(billType==='income'?'selected':'')}
+          onClick={() => setBillType('income')}
+          shape="rounded"
+        >
+          收入
+        </Button>
+      </div>
+      {/* 2. 适配数据 */}
+      <div className="kaTypeList">
+          {billListData[billType].map(item => {
+
+          })}
+      </div>
+    </div>
+  )
+}
+```
+
+## 记账 - 新增一笔
