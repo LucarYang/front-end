@@ -802,3 +802,54 @@ console.log(dayGroup);
   ));
 }
 ```
+
+# 切换打开关闭
+
+```jsx
+// 声明状态
+const [visible, setVisible] = useState(false)
+
+// 控制箭头
+ <span
+   className={classNames('arrow', !visible && 'expand')}
+   onClick={() => setVisible(!visible)}></span>
+
+// 控制列表显示
+<div className="billList" style={{ display: !visible && 'none' }}></div>
+```
+
+# Icon 组件封装
+
+```js
+const Icon = ({ type }) => {
+  return (
+    <img
+      src={`https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/reactbase/ka/${type}.svg`}
+      alt="icon"
+      style={{
+        width: 20,
+        height: 20,
+      }}
+    />
+  );
+};
+
+export default Icon;
+```
+
+```js
+// ...
+return (
+  <div className="bill" key={item.id}>
+    {/* 图标渲染 */}
+    <Icon type={item.useFor} />
+    <div className="detail">
+      <div className="billType">{billTypeToName[item.useFor]}</div>
+    </div>
+    <div className={classNames("money", item.type)}>
+      {item.money.toFixed(2)}
+    </div>
+  </div>
+);
+//...
+```
