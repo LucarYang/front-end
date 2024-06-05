@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import "./index.scss";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { billTypeToName } from "@/contants";
 
 const DailyBill = ({ date, billList }) => {
@@ -14,12 +14,19 @@ const DailyBill = ({ date, billList }) => {
       .reduce((a, c) => a + c.money, 0);
     return { pay, income, total: pay + income };
   }, [billList]);
+
+  //   控制右上方箭头的展开和收起
+  const [visible, setVisible] = useState(false);
   return (
     <div className={classNames("dailyBill")}>
       <div className="header">
         <div className="dateIcon">
           <span className="date">{date}</span>
-          <span className={classNames("arrow")}></span>
+          {/* expand 有这个类名 展开的箭头朝上的样子 */}
+          <span
+            className={classNames("arrow", visible && "expand")}
+            onClick={() => setVisible(!visible)}
+          ></span>
         </div>
         <div className="oneLineOverview">
           <div className="pay">
@@ -36,7 +43,7 @@ const DailyBill = ({ date, billList }) => {
           </div>
         </div>
       </div>
-      <div className="billList">
+      <div className="billList" style={{ display: visible ? "block" : "none" }}>
         {billList.map((item) => {
           return (
             <div className="bill" key={item.id}>
