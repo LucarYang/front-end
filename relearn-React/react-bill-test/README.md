@@ -547,3 +547,258 @@ const Month = () => {
   );
 };
 ```
+
+# 初始化渲染统计数据
+
+useEffect
+
+```js
+// ...
+const Month = () => {
+  // 按月做数据分组
+  const billList = useSelector((state) => state.bill.billList);
+  const monthGroup = useMemo(() => {
+    // return 出去计算之后的值
+    return _.groupBy(billList, (item) => dayjs(item.date).format("YYYY-MM"));
+  }, [billList]);
+  console.log(monthGroup);
+  // 控制弹框的打开和关闭
+  const [dateVisible, setDateVidible] = useState(false);
+
+  // 控制时间显示的状态
+  const [currentDate, setCurrentDate] = useState(() => {
+    return dayjs(new Date()).format("YYYY | MM");
+  });
+
+  const [currentMonthList, setMonthList] = useState([]);
+
+  const monthResult = useMemo(() => {
+    // 支出 收入 结余
+    const pay = currentMonthList
+      .filter((item) => item.type === "pay")
+      .reduce((a, c) => a + c.money, 0);
+    const income = currentMonthList
+      .filter((item) => item.type === "income")
+      .reduce((a, c) => a + c.money, 0);
+    return { pay, income, total: pay + income };
+  }, [currentMonthList]);
+
+  // 初始化的时候把当前月的数据显示出来
+  useEffect(() => {
+    const nowDate = dayjs().format("YYYY-MM");
+    // 边界值的判断
+    if (monthGroup[nowDate]) {
+      setMonthList(monthGroup[nowDate]);
+    }
+  }, [monthGroup]);
+
+  // ...
+};
+
+export default Month;
+```
+
+# 单日统计列表
+
+## 1. 准备组件和配套样式
+
+```jsx
+import classNames from "classnames";
+import "./index.scss";
+
+const DailyBill = () => {
+  return (
+    <div className={classNames("dailyBill")}>
+      <div className="header">
+        <div className="dateIcon">
+          <span className="date">{"03月23日"}</span>
+          <span className={classNames("arrow")}></span>
+        </div>
+        <div className="oneLineOverview">
+          <div className="pay">
+            <span className="type">支出</span>
+            <span className="money">{100}</span>
+          </div>
+          <div className="income">
+            <span className="type">收入</span>
+            <span className="money">{200}</span>
+          </div>
+          <div className="balance">
+            <span className="money">{100}</span>
+            <span className="type">结余</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+export default DailyBill;
+```
+
+配套样式
+
+```css
+.dailyBill {
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background: #ffffff;
+
+  .header {
+    --ka-text-color: #888c98;
+    padding: 15px 15px 10px 15px;
+
+    .dateIcon {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 21px;
+      margin-bottom: 9px;
+      .arrow {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        margin-top: -3px;
+        margin-left: 9px;
+        border-top: 2px solid #888c98;
+        border-left: 2px solid #888c98;
+        transform: rotate(225deg);
+        transform-origin: center;
+        transition: all 0.3s;
+      }
+      .arrow.expand {
+        transform: translate(0, 2px) rotate(45deg);
+      }
+
+      .date {
+        font-size: 14px;
+      }
+    }
+  }
+  .oneLineOverview {
+    display: flex;
+    justify-content: space-between;
+
+    .pay {
+      flex: 1;
+      .type {
+        font-size: 10px;
+        margin-right: 2.5px;
+        color: #e56a77;
+      }
+      .money {
+        color: var(--ka-text-color);
+        font-size: 13px;
+      }
+    }
+
+    .income {
+      flex: 1;
+      .type {
+        font-size: 10px;
+        margin-right: 2.5px;
+        color: #4f827c;
+      }
+      .money {
+        color: var(--ka-text-color);
+        font-size: 13px;
+      }
+    }
+
+    .balance {
+      flex: 1;
+      margin-bottom: 5px;
+      text-align: right;
+
+      .money {
+        line-height: 17px;
+        margin-right: 6px;
+        font-size: 17px;
+      }
+      .type {
+        font-size: 10px;
+        color: var(--ka-text-color);
+      }
+    }
+  }
+
+  .billList {
+    padding: 15px 10px 15px 15px;
+    border-top: 1px solid #ececec;
+    .bill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 43px;
+      margin-bottom: 15px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .icon {
+        margin-right: 10px;
+        font-size: 25px;
+      }
+      .detail {
+        flex: 1;
+        padding: 4px 0;
+        .billType {
+          display: flex;
+          align-items: center;
+          height: 17px;
+          line-height: 17px;
+          font-size: 14px;
+          padding-left: 4px;
+        }
+      }
+      .money {
+        font-size: 17px;
+
+        &.pay {
+          color: #ff917b;
+        }
+        &.income {
+          color: #4f827c;
+        }
+      }
+    }
+  }
+}
+.dailyBill.expand {
+  .header {
+    border-bottom: 1px solid #ececec;
+  }
+  .billList {
+    display: block;
+  }
+}
+```
+
+## 2.按日分组账单数据
+
+```javascript
+// 把当前月按日分组账单数据
+const dayGroup = useMemo(() => {
+  const group = _.groupBy(currentMonthList, (item) =>
+    dayjs(item.date).format("YYYY-MM-DD")
+  );
+  return {
+    dayKeys: Object.keys(group),
+    group,
+  };
+}, [currentMonthList]);
+console.log(dayGroup);
+```
+
+## 3. 遍历日账单组件并传入参数
+
+```jsx
+{
+  /* 日账单 */
+}
+{
+  dayGroup.dayKeys.map((dayKey) => (
+    <DailyBill key={dayKey} date={dayKey} billList={dayGroup.group[dayKey]} />
+  ));
+}
+```
