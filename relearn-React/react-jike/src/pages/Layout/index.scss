@@ -1,0 +1,44 @@
+.ant-layout {
+    height: 100%;
+  }
+  
+  .header {
+    padding: 0;
+    background: #1d39c4;
+  }
+  ul{
+    // background: #2f54eb !important;
+    // color: #fff !important;
+  }
+  .aside{
+    background: #1d39c4 !important}
+
+  .logo {
+    width: 200px;
+    height: 60px;
+    background: center/cover url('~@/assets/login.png') no-repeat center / 160px auto;
+  }
+  
+  .layout-content {
+    overflow-y: auto;
+  }
+  
+  .user-info {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-right: 20px;
+    color: #fff;
+    
+    .user-name {
+      margin-right: 20px;
+    }
+    
+    .user-logout {
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
+  .ant-layout-header {
+    padding: 0 !important;
+  }
