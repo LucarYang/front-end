@@ -241,48 +241,176 @@ From 失焦校验
 
 From 组件绑定 onFinish 回调函数，通过回调函数的参数获取用户输入的内容
 
-```jsx
-const Login = () => {
-  const onFinish = (values) => {
-    console.log(values); //{mobile: '18221835302', code: '112334'}
-  };
-  return (
-    <div className="login">
-      <Card className="login-container">
-        <img className="login-logo" src={logo} alt="" />
-        {/* 登录表单 */}
-        <Form onFinish={onFinish} validateTrigger="onBlur">
-          <Form.Item
-            name="mobile"
-            // 多条校验逻辑 先校验第一条 第一条通过或在校验第二条
-            rules={[
-              { required: true, message: "请输入手机号!" },
-              { pattern: /^1[3-9]\d{9}$/, message: "请输入正确的手机号!" },
-            ]}
-          >
-            <Input size="large" placeholder="请输入手机号" />
-          </Form.Item>
-          <Form.Item
-            name="code"
-            rules={[
-              { required: true, message: "请输入验证码!" },
-              { pattern: /\d{6}$/, message: "请输入正确的验证码!" },
-            ]}
-          >
-            <Input size="large" placeholder="请输入验证码" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" size="large" block>
-              登录
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
-    </div>
-  );
-
-```
-
 ## 登录 - 封装 request 请求模块
 
 使用 axios 三方库做统一封装，方便统一管理和复用
+
+```js
+// axios 的封装处理
+import axios from "axios";
+
+// 1. 根域名配置
+// 2. 超时时间
+// 3. 请求拦截器 / 响应拦截器
+
+const request = axios.create({
+  baseURL: "http://geek.itheima.net/v1_0",
+  timeout: 5000,
+});
+
+// 添加请求拦截器
+// 在请求发送之前做拦截 插入自定义的配置 [参数处理]
+request.interceptors.request.use(
+  (config) => {
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// 添加响应拦截器
+// 在响应返回到客户端之前 做拦截 重点处理返回的数据
+request.interceptors.use(
+  (response) => {
+    // 2xx 范围的状态码都会触发该函数
+    // 对响应数据做点什么
+    return response.data;
+  },
+  (error) => {
+    // 超过2xx 范围的请求码都会触发该函数
+    return Promise.reject(error);
+  }
+);
+
+export { request };
+```
+
+统一中转工具模块函数 utils\index.js
+
+```js
+// 统一中转工具模块函数
+// import {request } from "@/utils";
+
+import { request } from "./request";
+
+export { request };
+```
+
+## 登录 - 使用 Redux 管理 token
+
+token 是一个用户标识数据，在很多模块中共享，Redux 可以方便的解决状态共享问题
+
+1. Redux 中编写获取 Token 的异步获取和同步修改
+2. Login 组件负责提交 action 并把表单数据传递过来
+
+安装 Redux
+
+npm i react-redux @reduxjs/toolkit
+
+src\store\modules\user.js
+
+```js
+// 用户相关的状态管理
+import { createSlice } from "@reduxjs/toolkit";
+
+const userStore = createSlice({
+  name: "user",
+  // 数据状态
+  initialState: {
+    token: "",
+  },
+  // 同步的修改方法
+  reducers: {
+    setToken(state, action) {
+      state.token = action.payload;
+    },
+  },
+});
+
+// 解构出actionCreator
+const { setToken } = userStore.actions;
+
+// 获取reducer函数
+const userReducer = userStore.reducer;
+
+export { setToken };
+
+export default userReducer;
+```
+
+src\store\index.js
+
+```js
+// 组合Redux的子模块 + 导出store实例
+import { configureStore } from "@reduxjs/toolkit";
+import userReducer from "./modules/user";
+
+export default configureStore({
+  reducer: {
+    user: userReducer,
+  },
+});
+```
+
+src\index.js 通过 Provider 绑定
+
+```js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.scss";
+import { RouterProvider } from "react-router-dom";
+import router from "./router";
+import { Provider } from "react-redux";
+import store from "./store";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </React.StrictMode>
+);
+```
+
+## 实现 Redux 异步获取
+
+测试数据 13800000002 246810
+
+src\store\modules\user.js
+
+```js
+// ...
+
+// 异步方法 完成登录获取token
+const fetchLogin = (LoginFrom) => {
+  return async (dispatch) => {
+    // 1. 发送请求
+    const res = await request.post("/authorizations", LoginFrom);
+    // 2. 提交同步action进行token的存入
+    dispatch(setToken(res.data.token));
+  };
+};
+
+export { fetchLogin, setToken };
+// ...
+```
+
+src\pages\Login\index.js
+
+```js
+// ...
+import { useDispatch } from "react-redux";
+import { fetchLogin } from "@/store/modules/user";
+
+const Login = () => {
+  const dispatch = useDispatch();
+  const onFinish = (values) => {
+    console.log(values);
+    // 触发异步action
+    dispatch(fetchLogin(values));
+  };
+  // ...
+};
+```
