@@ -414,3 +414,54 @@ const Login = () => {
   // ...
 };
 ```
+
+# Redux 管理 token 实现登录
+
+src\pages\Login\index.js
+
+```jsx
+const onFinish = async (values) => {
+  console.log(values);
+  // 触发异步action
+  await dispatch(fetchLogin(values));
+
+  // 1. 跳转到首页
+
+  navigate("/");
+  // 2. 提示用户
+  message.success("登录成功");
+};
+```
+
+# 登录 - Token 持久化
+
+现在存在的问题：Redux 存入 Token 之后如果刷新浏览器，Token 会丢失(持久化就是防止刷新时丢失 Token)
+
+问题原因：Redux 是基于浏览器内存的存储方式，刷新时状态恢复为初始值
+
+**技术解决方案**：
+
+- 获取并存 Token `Rudex`+`LocalStorage`
+- 初始化 Token `LocalStorage` ? `LocalStorage` : `空字符串`
+
+src\store\modules\user.js
+
+```js
+// ...
+const userStore = createSlice({
+  // ...
+  initialState: {
+    token: localStorage.getItem("token_key") || "",
+  },
+  // 同步的修改方法
+  reducers: {
+    setToken(state, action) {
+      state.token = action.payload;
+      //   LocalStorage 存一份
+      localStorage.setItem("token_key", action.payload);
+    },
+  },
+});
+
+// ...
+```
