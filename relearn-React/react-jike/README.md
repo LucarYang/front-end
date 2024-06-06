@@ -554,3 +554,58 @@ const Layout = () => {
 };
 export default Layout;
 ```
+
+# 根据 token 做路由控制
+
+**使用 Token 做路由的权限控制**
+
+有些路由页面的的内容信息比较敏感，如果用户没有经过登录获取到有效 Token，日没有权限跳转的，根据 Token 的有无控制当前路由是否可以跳转就是路由的权限控制
+
+`路由组件` -> `高阶组件 HOC Component` -(是 正常返回路由组件)->路由组件 |-(否 强制跳回登录)->登录组件
+
+src\components\AuthRouter.js
+
+```js
+// 封装高阶组件
+// 核心逻辑： 有Token正常跳转 无Token去登录
+
+import { getToken } from "@/utils";
+import { Navigate } from "react-router-dom";
+
+export function AuthRouter({ children }) {
+  const token = getToken();
+  if (token) {
+    return <>{children}</>;
+  } else {
+    return <Navigate to={"/login"} replace />;
+  }
+}
+```
+
+测试 src\router\index.js
+
+```js
+// 路由配置
+import Layout from "@/pages/Layout";
+import Login from "@/pages/Login";
+import { createBrowserRouter } from "react-router-dom";
+import { AuthRouter } from "@/components/AuthRouter";
+
+// 配置路由
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <AuthRouter>
+        <Layout />
+      </AuthRouter>
+    ),
+  },
+  {
+    path: "/Login",
+    element: <Login />,
+  },
+]);
+
+export default router;
+```
