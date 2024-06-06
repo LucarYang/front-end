@@ -465,3 +465,50 @@ const userStore = createSlice({
 
 // ...
 ```
+
+# 封装 Token 的存取删除方法
+
+封装的原因：对于 Token 的各类操作在项目**多个模块中都有用到**，为了**共享复用**可以封装成工具函数
+
+src\utils\token.js
+
+```js
+// 封装和token相关的方法 存 取 删
+const TOKENKEY = "token_key";
+const setToken = (token) => {
+  localStorage.setItem(TOKENKEY, token);
+};
+
+const getToken = (token) => {
+  return localStorage.getItem(TOKENKEY, token);
+};
+
+const removeToken = () => {
+  localStorage.removeItem(TOKENKEY);
+};
+
+export { setToken, getToken, removeToken };
+```
+
+使用 src\store\modules\user.js
+
+```js
+import { setToken as _setToken, getToken } from "@/utils";
+// ...
+const userStore = createSlice({
+  // ...
+  initialState: {
+    token: token: getToken() || "", || "",
+  },
+  // 同步的修改方法
+  reducers: {
+    setToken(state, action) {
+      state.token = action.payload;
+      //   LocalStorage 存一份
+      _setToken(action.payload);
+    },
+  },
+});
+
+// ...
+```
