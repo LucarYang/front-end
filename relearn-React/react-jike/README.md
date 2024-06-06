@@ -512,3 +512,45 @@ const userStore = createSlice({
 
 // ...
 ```
+
+# axois 请求拦截器注入 token
+
+Token 作为用户的一个标识数据，**后端很多接口**都会以它作为接口权限判断的依据；请求拦截器注入 token 之后，所有用到 axios 实例接口请求都会**自动携带 token**
+
+axios 请求拦截器的请求头中注入 token
+
+src\utils\request.js
+
+```js
+request.interceptors.request.use(
+  (config) => {
+    // 操作这个config 注入token
+    // 1. 获取到token
+    // 2. 按照后端的格式要求去做token的拼接
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`; //config.headers.Authorization 固定写法  `Bearer ${token}` 由后端开发决定
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+```
+
+测试
+
+```jsx
+// 测试token是否成功注入
+import { request } from "@/utils";
+import { useEffect } from "react";
+
+const Layout = () => {
+  useEffect(() => {
+    request.get("/user/profile");
+  }, []);
+  return <div>this is Layout</div>;
+};
+export default Layout;
+```
