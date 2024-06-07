@@ -9,4 +9,12 @@ const getChannelAPI = () => {
   });
 };
 
-export { getChannelAPI };
+// 提交文章表单
+const CreateArticleAPI = (data) => {
+  return request({
+    url: "mp/articles?draft=false",
+    method: "POST",
+    data,
+  });
+};
+export { getChannelAPI, CreateArticleAPI };
