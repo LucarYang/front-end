@@ -16,27 +16,22 @@ import "./index.scss";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useEffect, useState } from "react";
-import { CreateArticleAPI, getChannelAPI } from "@/apis/article";
+import { useState } from "react";
+import { CreateArticleAPI } from "@/apis/article";
+import { useChannel } from "@/hooks/useChannel";
 
 const { Option } = Select;
 
 const Publish = () => {
   // 获取频道列表
-  const [channelList, setChannelList] = useState([]);
-  useEffect(() => {
-    const getChannleList = async () => {
-      const res = await getChannelAPI();
-      setChannelList(res.data.channels);
-    };
-    getChannleList();
-  }, []);
+  const { channelList } = useChannel();
 
   // 提交表单
   const onFinish = (fromVal) => {
     // console.log(fromVal);
     // 校验封面类型imageType是否和实际的图片列表imageList数量相等
-    if(imageList.length!=imageType) return message.warning('封面类型和图片不匹配')
+    if (imageList.length != imageType)
+      return message.warning("封面类型和图片不匹配");
     const { title, content, channel_id } = fromVal;
     // 按照接口格式处理收集到的数据
     const reqData = {
@@ -44,7 +39,7 @@ const Publish = () => {
       content,
       cover: {
         type: imageType,
-        images: imageList.map((item)=>item.response.data.url),
+        images: imageList.map((item) => item.response.data.url),
       },
       channel_id,
     };
@@ -107,7 +102,7 @@ const Publish = () => {
             <Form.Item name="type">
               <Radio.Group onChange={onTypeChange}>
                 {/* type的默认 受From的initialValues控制 */}
-                <Radio value={1}>单图</Radio> 
+                <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
               </Radio.Group>

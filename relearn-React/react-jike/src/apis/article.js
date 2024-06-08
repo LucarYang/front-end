@@ -17,4 +17,16 @@ const CreateArticleAPI = (data) => {
     data,
   });
 };
-export { getChannelAPI, CreateArticleAPI };
+
+
+// 获取文章列表
+ const getArticleListAPI=(params)=>{
+  return request({
+    url: "/mp/articles",
+    method: "GET",
+    params
+  });
+ }
+export { getChannelAPI, CreateArticleAPI,getArticleListAPI };
+
+ 
