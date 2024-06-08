@@ -25,6 +25,11 @@ const { RangePicker } = DatePicker;
 const Article = () => {
   const { channelList } = useChannel();
 
+  // 定义枚举
+  const status={
+    1:<Tag color="yellow">待审核</Tag>,
+    2:<Tag color="green">审核通过</Tag>,
+  }
   // 准备列数据
   const columns = [
     {
@@ -45,7 +50,9 @@ const Article = () => {
     {
       title: "状态",
       dataIndex: "status",
-      render: (data) => <Tag color="green">审核通过</Tag>,
+      // data后端返回的status
+      // render: (data) =>data===1?<Tag color="yellow">待审核</Tag>:<Tag color="green">审核通过</Tag>,//三元表示的写法
+      render: (data) =>status[data] //枚举的写法
     },
     {
       title: "发布时间",
@@ -80,21 +87,7 @@ const Article = () => {
       },
     },
   ];
-  // 准备表格body数据
-  const data = [
-    {
-      id: "8218",
-      comment_count: 0,
-      cover: {
-        images: [],
-      },
-      like_count: 0,
-      pubdate: "2019-03-11 09:00:00",
-      read_count: 2,
-      status: 2,
-      title: "wkwebview离线化加载h5资源解决方案",
-    },
-  ];
+  
 
   // 获取文章list
   const [list, setList] = useState([]);
