@@ -18,15 +18,20 @@ const CreateArticleAPI = (data) => {
   });
 };
 
-
 // 获取文章列表
- const getArticleListAPI=(params)=>{
+const getArticleListAPI = (params) => {
   return request({
     url: "/mp/articles",
     method: "GET",
-    params
+    params,
   });
- }
-export { getChannelAPI, CreateArticleAPI,getArticleListAPI };
+};
 
- 
+//  删除文章
+const delArticleAPI = (id) => {
+  return request({
+    url: `/mp/articles/${id}`,
+    method: "DELETE",
+  });
+};
+export { getChannelAPI, CreateArticleAPI, getArticleListAPI,delArticleAPI };
