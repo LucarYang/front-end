@@ -89,18 +89,49 @@ const Article = () => {
   ];
   
 
+// 筛选功能
+  // 1.准备参数
+  const [reqData,setReqData]=useState({
+    status:'',
+    channel_id:'',
+    begin_pudate:'',
+    end_pudate:'',
+    page:'1',
+    per_page:'4'
+  })
+
+
   // 获取文章list
   const [list, setList] = useState([]);
   const [count,setCount]=useState(0)
   useEffect(() => {
     async function getList() {
-      const res = await getArticleListAPI();
+      const res = await getArticleListAPI(reqData);
       setList(res.data.results);
       setCount(res.data.total_count)
     }
     getList();
-  }, []);
+  }, [reqData]);
 
+
+  
+  // 2. 获取筛选数据
+  const onFinish=(fromVal)=>{
+    console.log(fromVal)
+    // 3. 表单数据放到参数中(不可变方式)
+    setReqData({
+      ...reqData,
+      channel_id:fromVal.channel_id,
+      status:fromVal.status,
+      begin_pudate:fromVal.date[0].format('YYYY-MM-DD'),
+      end_pudate:fromVal.date[1].format('YYYY-MM-DD'),
+
+    })
+
+    // 4. 重新拉取文章列表+ 渲染label逻辑重复的-服用
+    // reqData依赖项发生变化 重复执行作用函数
+    
+  }
   return (
     <div>
       <Card
@@ -114,7 +145,7 @@ const Article = () => {
         }
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: "" }}>
+        <Form initialValues={{ status: "" }} onFinish={onFinish}>
           <Form.Item label="状态" name="status">
             <Radio.Group>
               <Radio value={""}>全部</Radio>
@@ -139,7 +170,7 @@ const Article = () => {
 
           <Form.Item label="日期" name="date">
             {/* 传入locale属性 控制中文显示*/}
-            <RangePicker locale={locale}></RangePicker>
+            <RangePicker locale={locale}/>
           </Form.Item>
 
           <Form.Item>
