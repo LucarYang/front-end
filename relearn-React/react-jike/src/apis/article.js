@@ -18,6 +18,15 @@ const CreateArticleAPI = (data) => {
   });
 };
 
+// 更新文章 
+const UpdateArticleAPI = (data) => {
+  return request({
+    url: `mp/articles/${data.id}?draft=false`,
+    method: "PUT",
+    data,
+  });
+};
+
 // 获取文章列表
 const getArticleListAPI = (params) => {
   return request({
@@ -42,4 +51,5 @@ const getArticleById=(id)=>{
     method: "GET",
   })
 }
-export { getChannelAPI, CreateArticleAPI, getArticleListAPI,delArticleAPI,getArticleById };
+
+export { getChannelAPI, CreateArticleAPI,UpdateArticleAPI, getArticleListAPI,delArticleAPI,getArticleById };
