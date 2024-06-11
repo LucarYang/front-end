@@ -34,4 +34,12 @@ const delArticleAPI = (id) => {
     method: "DELETE",
   });
 };
-export { getChannelAPI, CreateArticleAPI, getArticleListAPI,delArticleAPI };
+
+// 获取文章详情
+const getArticleById=(id)=>{
+  return request({
+    url: `/mp/articles/${id}`,
+    method: "GET",
+  })
+}
+export { getChannelAPI, CreateArticleAPI, getArticleListAPI,delArticleAPI,getArticleById };

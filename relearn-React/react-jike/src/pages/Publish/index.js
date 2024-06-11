@@ -11,13 +11,13 @@ import {
   message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import "./index.scss";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useState } from "react";
-import { CreateArticleAPI } from "@/apis/article";
+import { useEffect,  useState } from "react";
+import { CreateArticleAPI, getArticleById } from "@/apis/article";
 import { useChannel } from "@/hooks/useChannel";
 
 const { Option } = Select;
@@ -30,7 +30,7 @@ const Publish = () => {
   const onFinish = (fromVal) => {
     // console.log(fromVal);
     // 校验封面类型imageType是否和实际的图片列表imageList数量相等
-    if (imageList.length != imageType)
+    if (imageList.length !== imageType)
       return message.warning("封面类型和图片不匹配");
     const { title, content, channel_id } = fromVal;
     // 按照接口格式处理收集到的数据
@@ -59,6 +59,34 @@ const Publish = () => {
   const onTypeChange = (e) => {
     setImageType(e.target.value);
   };
+
+  // 回填数据
+  const [searchParams] = useSearchParams();
+  const articleId = searchParams.get("id");
+  // 获取实例
+  const [form]=Form.useForm()
+  useEffect(() => {
+    // 1.通过id获取数据
+    async function getArticleDetail(){
+      const res=await getArticleById(articleId)
+      const data=res.data
+      const {cover}=data
+      form.setFieldsValue({
+        ...data,
+        type:cover.type
+      })
+      // 为什么现在的写法无法回填封面？ 数据结构的问题 
+
+      // 回填图片
+      setImageType(cover.type)
+      // 显示图片
+      setImageList(cover.images.map((url)=>{
+        return {url }
+      }))
+    }
+    // 2.调用实例方法 完成回填
+    getArticleDetail() 
+  }, [articleId,form]);
   return (
     <div className="publish">
       <Card
@@ -76,6 +104,7 @@ const Publish = () => {
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 0 }}
           onFinish={onFinish}
+          form={form}
         >
           <Form.Item
             label="标题"
@@ -119,6 +148,7 @@ const Publish = () => {
                 action={"http://geek.itheima.net/v1_0/upload"}
                 onChange={onUploadChange}
                 maxCount={imageType}
+                fileList={imageList}
               >
                 <div style={{ marginTop: 8 }}>
                   <PlusOutlined />
