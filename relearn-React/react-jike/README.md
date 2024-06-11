@@ -754,3 +754,16 @@ body {
   height: 100%;
 }
 ```
+
+# 项目打包
+
+```bash
+npm run build
+```
+
+- 本地预览:
+安装本地服务：
+
+npm i -g serve
+
+serve -s ./build
