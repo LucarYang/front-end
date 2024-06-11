@@ -16,7 +16,7 @@ import "./index.scss";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useEffect,  useState } from "react";
+import { useEffect, useState } from "react";
 import { CreateArticleAPI, getArticleById } from "@/apis/article";
 import { useChannel } from "@/hooks/useChannel";
 
@@ -64,29 +64,34 @@ const Publish = () => {
   const [searchParams] = useSearchParams();
   const articleId = searchParams.get("id");
   // 获取实例
-  const [form]=Form.useForm()
+  const [form] = Form.useForm();
   useEffect(() => {
     // 1.通过id获取数据
-    async function getArticleDetail(){
-      const res=await getArticleById(articleId)
-      const data=res.data
-      const {cover}=data
+    async function getArticleDetail() {
+      const res = await getArticleById(articleId);
+      const data = res.data;
+      const { cover } = data;
       form.setFieldsValue({
         ...data,
-        type:cover.type
-      })
-      // 为什么现在的写法无法回填封面？ 数据结构的问题 
+        type: cover.type,
+      });
+      // 为什么现在的写法无法回填封面？ 数据结构的问题
 
       // 回填图片
-      setImageType(cover.type)
+      setImageType(cover.type);
       // 显示图片
-      setImageList(cover.images.map((url)=>{
-        return {url }
-      }))
+      setImageList(
+        cover.images.map((url) => {
+          return { url };
+        })
+      );
+    }
+    // 只有有id的时候才能调用此函数
+    if (articleId) {
+      getArticleDetail();
     }
     // 2.调用实例方法 完成回填
-    getArticleDetail() 
-  }, [articleId,form]);
+  }, [articleId, form]);
   return (
     <div className="publish">
       <Card
@@ -94,7 +99,7 @@ const Publish = () => {
           <Breadcrumb
             items={[
               { title: <Link to={"/"}>首页</Link> },
-              { title: "发布文章" },
+              { title: `${articleId ? "编辑文章" : "发布文章"}` },
             ]}
           />
         }
