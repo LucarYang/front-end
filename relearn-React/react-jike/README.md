@@ -762,8 +762,101 @@ npm run build
 ```
 
 - 本地预览:
-安装本地服务：
+  安装本地服务：
 
 npm i -g serve
 
 serve -s ./build
+
+## 打包优化 - lazy 懒加载
+
+```js
+// 路由配置
+import Layout from "@/pages/Layout";
+import Login from "@/pages/Login";
+import { createBrowserRouter } from "react-router-dom";
+import { AuthRouter } from "@/components/AuthRouter";
+// import Home from "@/pages/Home";
+// import Article from "@/pages/Article";
+// import Publish from "@/pages/Publish";
+import { Suspense, lazy } from "react";
+
+// lazy函数对组件进行导入
+const Home = lazy(() => import("@/pages/Home"));
+const Article = lazy(() => import("@/pages/Article"));
+const Publish = lazy(() => import("@/pages/Publish"));
+
+// 配置路由
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <AuthRouter>
+        <Layout />
+      </AuthRouter>
+    ),
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={"加载中……"}>
+            <Home />
+          </Suspense>
+        ),
+      },
+      {
+        path: "article",
+        element: (
+          <Suspense fallback={"加载中……"}>
+            <Article />
+          </Suspense>
+        ),
+      },
+      {
+        path: "publish",
+        element: (
+          <Suspense fallback={"加载中……"}>
+            <Publish />
+          </Suspense>
+        ),
+      },
+    ],
+  },
+  {
+    path: "/Login",
+    element: <Login />,
+  },
+]);
+
+export default router;
+```
+
+## 打包优化 - 包体积分析
+
+第三方插件：soure-map-explorer
+
+安装插件：npm i soure-map-explorer
+
+配置需要分析的目录：
+
+- source-map-explorer 'build/static/js/\*'
+
+```json
+"scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/static/js/*'"
+  },
+```
+
+运行命令
+npm run analyze
+
+## 打包优化 - CDN 优化
+
+优化 react react-dom
+
+1. 把需要 CDN 缓存的文件排除在打包之外(react react-dom)
+2. 以 CDN 的方式重新引入资源(react react-dom)
