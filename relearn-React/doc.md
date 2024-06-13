@@ -21,7 +21,7 @@ React 是 mate 公司研发的是一个 **构建 Web 和原生交换界面的库
 
 执行命令(react-basic 项目名称)
 
-```cmd
+```bash
 npx create-react-app react-basic
 ```
 
