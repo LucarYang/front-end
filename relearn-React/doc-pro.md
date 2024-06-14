@@ -311,3 +311,409 @@ export default App;
 # Class API
 
 编写类组件
+
+- 类组件基础结构
+
+  - 类组件就是通过 JS 中类来组织组件的代码
+
+  1. 通过类属性 state 定义状态数据
+  2. 通过 setState 方法来修改状态数据
+  3. 通过 render 来写 UI 模版(JSX 语法一致)
+
+```js
+import { Component } from "react";
+
+class Counter extends Component {
+  // 编写组见得逻辑
+  // 1.状态变量 2.事件回调 3.UI模版JSX
+
+  // 1.定义状态变量
+  state = {
+    count: 0,
+  };
+
+  // 2.定义事件回调修改状态数据
+  setCount = () => {
+    // 修改状态数据
+    this.setState({
+      count: this.state.count + 1,
+    });
+  };
+
+  render() {
+    return <button onClick={this.setCount}>{this.state.count}</button>;
+  }
+}
+function App() {
+  return (
+    <div className="App">
+      <Counter />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 类组件的生命周期函数
+
+概念：组件从创建到销毁的各个阶段自动执行的函数就是生命周期函数
+
+- componentDidMount 组件加载完成自动执行 > 异步数据获取
+- componentDidUopdate
+- componentwillunmount 组件卸载时自动执行 > 情路副作用
+
+```js
+import { Component, useState } from "react";
+
+class Son extends Component {
+  // 声明周期函数
+
+  // 组件渲染完毕执行一次 发送网路请求
+  componentDidMount() {
+    console.log("组件渲染完毕 请求发送起来");
+    // 开启一个定时器
+    this.timer = setInterval(() => {
+      console.log("我还在");
+    }, 1000);
+  }
+
+  // 组件卸载的时候执行  副作用清理的工作 清楚定时器 清除事件绑定
+  componentWillUnmount() {
+    console.log("卸载了");
+    // 清楚定时器
+    clearInterval(this.timer);
+  }
+
+  render() {
+    return <div>I am Son</div>;
+  }
+}
+function App() {
+  const [show, setShow] = useState(true);
+  return (
+    <div className="App">
+      {show && <Son />}
+      <button onClick={() => setShow(false)}>unmount Son </button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 类组件的通信说明
+
+概念 类组件的 Hooks 编写的组件在组件通信的思想上完全一致(类组件依赖于 this)
+
+1. 父传子 通过 prop 绑定数据
+2. 子传父 通过 porp 绑定父组件中的函数，子组件调用
+3. 兄弟通信 状态提升 通过父组件做桥接
+
+父传子
+
+```js
+import { Component } from "react";
+
+// 父传子 直接通过在子组件标签上绑定父组件中数据即可
+
+class Son extends Component {
+  render() {
+    // 使用this.props.
+
+    return <div>I am Son {this.props.msg}</div>;
+  }
+}
+
+class Parent extends Component {
+  state = {
+    message: "this is parent msg",
+  };
+  render() {
+    return (
+      <div>
+        I am Parent
+        <Son msg={this.state.message} />
+      </div>
+    );
+  }
+}
+
+function App() {
+  return (
+    <div className="App">
+      <Parent />
+    </div>
+  );
+}
+
+export default App;
+```
+
+子传父
+
+```js
+import { Component } from "react";
+
+// 父传子 直接通过在子组件标签上绑定父组件中数据即可
+// 子传父 在子组件标签上绑定父组件中的函数， 在子组件中调用这个函数传递参数
+
+class Son extends Component {
+  render() {
+    // 使用this.props.
+    return (
+      <div>
+        <div>I am Son {this.props.msg}</div>
+        <button onClick={() => this.props.onGetSonMsg("我是son组件中的数据")}>
+          sedMsgToParent
+        </button>
+      </div>
+    );
+  }
+}
+
+class Parent extends Component {
+  state = {
+    message: "this is parent msg",
+  };
+  getSonMsg = (sonMsg) => {
+    console.log(sonMsg);
+  };
+  render() {
+    return (
+      <div>
+        I am Parent
+        <Son msg={this.state.message} onGetSonMsg={this.getSonMsg} />
+      </div>
+    );
+  }
+}
+
+function App() {
+  return (
+    <div className="App">
+      <Parent />
+    </div>
+  );
+}
+
+export default App;
+```
+
+# zustand
+
+极简的状态管理工具
+
+创建 store <状态数据 操作方法> -->-->(绑定组件)-->--> Component <消费数据和方法>
+
+安装 zustand
+
+```bash
+npm i zustand
+```
+
+```js
+import { create } from "zustand";
+
+// 1.创建store
+// 语法容易出错
+// 1. 函数参数必须返回一个对象 对象内部编写我们的状态和方法
+// 2.set是用来修改数据的专门方法 必须调用它来修改数据
+// 语法1：参数式函数 需要用到老数据的场景
+// 语法2：参数直接是一个对象 set({ count: 100 });
+
+const useStore = create((set) => {
+  return {
+    // 状态数据
+    count: 0,
+    // 修改状态的方法
+    inc: () => {
+      set((state) => ({
+        count: state.count + 1,
+      })); //基于源数据做计算  参数是函数
+      // set({ count: 100 }); //基于源数据做修改  参数是对象
+    },
+  };
+});
+
+// 2.绑定store到组件
+//  userStore=> { count, inc };
+
+function App() {
+  const { count, inc } = useStore();
+  return (
+    <div className="App">
+      <button onClick={inc}>{count}</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## zustand 异步支持
+
+对异步的支持不需要特殊的操作，直接在函数中编写异步逻辑，最后只需要调用 set 方法传入新的状态即可
+
+```js
+import { create } from "zustand";
+import { useEffect } from "react";
+const URL = "http://geek.itheima.net/v1_0/channels";
+// 1.创建store
+// 语法容易出错
+// 1. 函数参数必须返回一个对象 对象内部编写我们的状态和方法
+// 2.set是用来修改数据的专门方法 必须调用它来修改数据
+// 语法1：参数式函数 需要用到老数据的场景
+// 语法2：参数直接是一个对象 set({ count: 100 });
+
+const useStore = create((set) => {
+  return {
+    // 状态数据
+    count: 0,
+    // 修改状态的方法
+    inc: () => {
+      set((state) => ({
+        count: state.count + 1,
+      })); //基于源数据做计算  参数是函数
+      // set({ count: 100 }); //基于源数据做修改  参数是对象
+    },
+    channelList: [],
+    fetchGetList: async () => {
+      const res = await fetch(URL);
+      const jsonRes = await res.json();
+      console.log(jsonRes);
+      set({
+        channelList: jsonRes.data.channels,
+      });
+    },
+  };
+});
+
+// 2.绑定store到组件
+//  userStore=> { count, inc };
+
+function App() {
+  const { count, inc, channelList, fetchGetList } = useStore();
+  useEffect(() => {
+    fetchGetList();
+  }, [fetchGetList]);
+  return (
+    <div className="App">
+      <button onClick={inc}>{count}</button>
+      <ul>
+        {channelList.map((item, index) => (
+          <li key={index}>{item.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## zustand 切片模式
+
+场景：当单个 store 比较大的时候，可以采用切片模式进行模块化组合，类似于模块化
+
+# React 与 TypeScript
+
+基于 Vite 创建项目
+
+```bash
+npm create vite@latest react-ts-pro -- --template react-ts
+```
+
+## useState 与 TypeScript
+
+useState 自动推到方式
+
+通常 React 会根据传入 useState 的默认值来自动推到类型，不需要显示标注类型
+
+```tsx
+// 根据初始值自动推断
+// 场景 > 明确的初始值
+
+import { useState } from "react";
+
+function App() {
+  const [value, taggle] = useState(false);
+  const [list, setList] = useState([1, 2, 3]);
+  // const changeValue = () => {
+  //   taggle(true)
+  // }
+  const changeList = () => {
+    setList([5]);
+  };
+  return (
+    <>
+      <div>
+        {" "}
+        this is app{value}
+        {list}
+      </div>
+    </>
+  );
+}
+
+export default App;
+```
+
+## useState 传递繁星参数
+
+useState 本身是一个泛型函数 可以传入具体的自定义类型
+
+```tsx
+type User = {
+  name: string;
+  age: number;
+};
+
+const [user, setUser] = useState<User>();
+```
+
+说明
+
+1. 限制 useState 函数参数的初始值必须满足类型为：User | ()=>User
+2. 限制 setUser 函数的参数必须满足类型为：User|()=>User|undefined
+3. use 状态数据具备 User 类型相关的类型提示
+
+```tsx
+// 根据初始值自动推断
+// 场景 > 明确的初始值
+
+import { useState } from "react";
+type User = {
+  name: string;
+  age: number;
+};
+
+function App() {
+  // 限制初始值
+  // const [user, setUser] = useState<User>({
+  //   name: 'jack',
+  //   age: 12
+  // })
+
+  const [user, setUser] = useState<User>(() => {
+    return {
+      name: "jack",
+      age: 12,
+    };
+  });
+
+  const changeUser = () => {
+    setUser(() => ({
+      name: "Tom",
+      age: 12,
+    }));
+  };
+  return (
+    <>
+      <div> this is app {user.name}</div>
+    </>
+  );
+}
+
+export default App;
+```
