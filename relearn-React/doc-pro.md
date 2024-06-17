@@ -659,7 +659,7 @@ function App() {
 export default App;
 ```
 
-## useState 传递繁星参数
+## useState 传递泛型参数
 
 useState 本身是一个泛型函数 可以传入具体的自定义类型
 
@@ -711,6 +711,249 @@ function App() {
   return (
     <>
       <div> this is app {user.name}</div>
+    </>
+  );
+}
+
+export default App;
+```
+
+## useState 初始值为 null
+
+当我们不知道状态的初始值是什么，将 useState 的初始值为 null 是一个常见的做法，可以通过具体类型联合 null 来做显示注释
+
+```tsx
+type User = {
+  name: String;
+  age: number;
+};
+const [user, setUser] = useState<User | null>(null);
+```
+
+说明：
+
+1. 限制 useState 函数参数的初始值可以是 User|null
+2. 限制 setUser 函数的参数类型可以是 User|null
+
+```tsx
+import { useState } from "react";
+type User = {
+  name: string;
+  age: number;
+};
+
+function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const changUser = () => {
+    setUser(null);
+    setUser({
+      name: "toom",
+      age: 12,
+    });
+  };
+  return (
+    <>
+      {/* 为了类型安全，可选链做类型守卫
+      只有user不为null(不为空值)的时候才进行点运算 */}
+      <div> this is app{user?.age}</div>
+    </>
+  );
+}
+
+export default App;
+```
+
+# Props 与 TypeScript
+
+为组件 prop 添加类型，本质是给函数的参数做类型注解，可以使用 type 对象类型或者 Interface 接口来做注释
+
+```ts
+type Props = {
+  className: string;
+};
+function Button(props: Props) {
+  const { className } = props;
+  return <button className={className}>click me</button>;
+}
+```
+
+说明：Button 组件只能传入 className 的 prop 参数，类型 string，且为必填
+
+```tsx
+// type写法
+// type Props = {
+//   className: string;
+// };
+
+interface Props {
+  className: string;
+  title?: string;
+}
+
+function Button(props: Props) {
+  const { className } = props;
+  return <button className={className}>click me</button>;
+}
+
+function App() {
+  return (
+    <>
+      <div> this is app</div>
+      <Button className="test" />
+    </>
+  );
+}
+
+export default App;
+```
+
+## Props 与 TypeScript -为 children 添加类型
+
+children 是一个比较特殊的 prop，支持多种不同类型数据传入，需要通过一个内置的 ReactNode 类型来做注解
+
+```ts
+type Props = {
+  className: string;
+  children: React.ReactNode;
+};
+function Button(props: Props) {
+  const { className, children } = props;
+  return <button className={className}>{children}</button>;
+}
+```
+
+说明：注解之后，children 可以是多种类型，包括：React.ReactElement、string、number、React.ReactFragment、React.ReactPortal、boolean、null、undefined
+
+```tsx
+type Props = {
+  className: string;
+  children: React.ReactNode;
+};
+
+function Button(props: Props) {
+  const { className, children } = props;
+  return <button className={className}>{children}</button>;
+}
+
+function App() {
+  return (
+    <>
+      <div> this is app</div>
+      <Button className="test">click me</Button>
+      <Button className="test">
+        <span>this is span</span>
+      </Button>
+    </>
+  );
+}
+
+export default App;
+```
+
+## Props 与 TypeScript 为事件 prop 添加类型
+
+组件经常执行类型为函数的 prop 实现子传父，这类 prop 重点在于函数参数类型的注解
+
+```ts
+type Props = {
+  onGetMsg?: (msg: string) => void;
+};
+function Son(props: Props) {
+  const { onGetMsg } = props;
+
+  const clickMsg = () => {
+    onGetMsg?.("this is msg");
+  };
+
+  return <button onClick={clickHandler}>sending</button>;
+}
+```
+
+1. 在组件内部调用时需要遵守类型的约束，参数传递需要满足需求
+2. 绑定 prop 时如果绑定内联函数直接可以推断出参数类型，负责需要单独注解匹配的参数类型
+
+```tsx
+type Props = {
+  onGetMsg?: (msg: string) => void;
+};
+
+function Son(props: Props) {
+  const { onGetMsg } = props;
+  const clickHandler = () => {
+    onGetMsg?.("this is msg");
+  };
+  return <button onClick={clickHandler}>click me</button>;
+}
+
+function App() {
+  const getMsgHandler = (msg: string) => {
+    console.log(msg);
+  };
+
+  return (
+    <>
+      <div> this is app</div>
+      <Son onGetMsg={getMsgHandler} />
+    </>
+  );
+}
+
+export default App;
+```
+
+# useRef 与 Typescript
+
+## useRef 与 Typescript - 获取 dom
+
+获取 dom 的场景，可以直接把要获取的 dom 元素的类型当场泛型参数传递给 useRef，可以推导出.crreunt 属性的类型
+
+```tsx
+import { useEffect, useRef } from "react";
+
+// 1.获取dom
+function App() {
+  const domRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    // 可选链 前面不为空值(null /undefined)执行点运算
+    // 类型守卫防止出现空值.运算错误
+    domRef.current?.focus();
+  }, []);
+  return (
+    <>
+      <input ref={domRef} />
+      <div> this is app</div>
+    </>
+  );
+}
+
+export default App;
+```
+
+## useRef 与 Typescript - 引用稳定存储器
+
+把 useRef 当成引用稳定的存储器适用的场景可以通过泛型传入联合类型来做，比如定时器的场景
+
+```tsx
+import { useEffect, useRef } from "react";
+
+// 1.获取dom
+// 2. 稳定引用的存储器(定时器管理)
+function App() {
+  const domRef = useRef<HTMLInputElement>(null);
+  const timerID = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    // 可选链 前面不为空值(null /undefined)执行点运算
+    // 类型守卫防止出现空值.运算错误
+    domRef.current?.focus();
+    timerID.current = setInterval(() => {
+      console.log("123");
+    }, 1000);
+    return () => clearInterval(timerID.current);
+  }, []);
+  return (
+    <>
+      <input ref={domRef} />
+      <div> this is app</div>
     </>
   );
 }
