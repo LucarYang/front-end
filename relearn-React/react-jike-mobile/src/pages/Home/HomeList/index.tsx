@@ -4,6 +4,7 @@ import { users } from './users'
 import { useState } from 'react'
 import { ListRes, fetchListAPI } from '@/apis/list'
 import { log } from 'console'
+import { useNavigate } from 'react-router-dom'
 
 type Props = {
     channelId: string
@@ -60,11 +61,18 @@ const HomeList = (props: Props) => {
         }
     }
 
+    const navigate=useNavigate()
+
+    const goToDetial=(id:string)=>{
+        // 路由跳转
+        navigate(`/detail?id=${id}`)
+    }
     return (
         <>
             <List>
                 {listRes.results.map((item) => (
                     <List.Item
+                    onClick={()=> goToDetial(item.art_id)}
                         key={item.art_id}
                         prefix={
                             <Image
