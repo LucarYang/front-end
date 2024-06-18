@@ -53,3 +53,10 @@ export default {
 | router     | 路由 Router |
 | store      | Redux 状态  |
 | utils      | 工具函数    |
+
+#### 参照
+
+https://github.com/d3george/slash-admin
+
+https://admin.slashspaces.com/#/dashboard/workbench
+
