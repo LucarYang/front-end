@@ -13,6 +13,14 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    
+    /* 让 VScode 做只能路径提示(开发者体验) */
+    "baseUrl": ".",
+    "paths": {
+      "@/*":[
+        "src/*"
+      ]
+    },
 
     /* Linting */
     "strict": true,

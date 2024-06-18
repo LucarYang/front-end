@@ -1,0 +1,35 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* 这是一个好习惯，确保padding和border不会增加元素的总宽度和高度 */
+  /* display: flex; */
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.demo-logo-vertical {
+  width: 80%;
+  height: 20px;
+  display: flex;
+  color: #fff;
+  line-height: 20px;
+  margin: 20px;
+}
+.ant-menu-inline {
+  background: #002c8c !important;
+}
+.ant-layout-sider {
+  background: #002c8c !important;
+}
+.ant-menu-item {
+  color: #fff !important;
+}
+.aant-menu-title {
+  color: #fff !important;
+}
