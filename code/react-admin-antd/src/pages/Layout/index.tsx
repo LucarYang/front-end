@@ -6,7 +6,7 @@ import {
     MessageFilled,
     SettingFilled
 } from '@ant-design/icons';
-import { Button, Layout as LayoutAntD, theme, Breadcrumb } from 'antd';
+import { Button, Layout as LayoutAntD, theme, Breadcrumb, ConfigProvider, Badge, Space } from 'antd';
 import SiderCom from '../Sider';
 
 const { Header, Content } = LayoutAntD;
@@ -19,31 +19,6 @@ const Layout: React.FC = () => {
 
     return (
         <LayoutAntD style={{ height: 'calc(100vh - 0px)' }}>
-            {/* <Sider trigger={null} collapsible collapsed={collapsed}>
-                <div className="demo-logo-vertical"> React-Admin</div>
-                <Menu
-                    theme="dark"
-                    mode="inline"
-                    defaultSelectedKeys={['1']}
-                    items={[
-                        {
-                            key: '1',
-                            icon: <UserOutlined />,
-                            label: 'nav 1',
-                        },
-                        {
-                            key: '2',
-                            icon: <VideoCameraOutlined />,
-                            label: 'nav 2',
-                        },
-                        {
-                            key: '3',
-                            icon: <UploadOutlined />,
-                            label: 'nav 3',
-                        },
-                    ]}
-                />
-            </Sider> */}
             <SiderCom collapsed={collapsed} />
             <LayoutAntD>
                 <Header style={{ padding: 0, background: colorBgContainer }}>
@@ -57,28 +32,36 @@ const Layout: React.FC = () => {
                             height: 64,
                         }}
                     />
-                    <div>
-                        <Button
-                            type="text"
-                            icon={<MessageFilled />}
 
-                            style={{
-                                fontSize: '16px',
-                                width: 64,
-                                height: 64,
-                            }}
-                        />
-                        <Button
-                            type="text"
-                            icon={<SettingFilled />}
+                    <Space style={{
+                        float: "right",
+                        marginRight: 30,
+                        marginLeft: 30
+                    }}>
+                        <Badge count={5}>
+                            <MessageFilled style={{
+                                fontSize: '20px',
+                                color: '#1677ff',
+                            }} />
+                        </Badge>
+                    </Space>
 
-                            style={{
-                                fontSize: '16px',
-                                width: 64,
-                                height: 64,
-                            }}
-                        />
-                    </div>
+                    <Button
+                        type="text"
+
+                        icon={<SettingFilled style={{
+                            fontSize: '20px',
+                            color: '#1677ff',
+                        }} />}
+
+                        style={{
+                            fontSize: '26px',
+                            color: '#1677ff',
+                            width: 64,
+                            height: 64,
+                            float: "right",
+                        }}
+                    />
                 </Header>
                 <Breadcrumb style={{ margin: '10px 0px 0 20px' }} items={[
                     {
@@ -94,7 +77,11 @@ const Layout: React.FC = () => {
                         key: 'my-app',
                     },
                 ]} />
-
+                <Breadcrumb style={{ margin: '10px 20px' }}>
+                    <Breadcrumb.Item>Home</Breadcrumb.Item>
+                    <Breadcrumb.Item>List</Breadcrumb.Item>
+                    <Breadcrumb.Item>App</Breadcrumb.Item>
+                </Breadcrumb>
                 <Content
                     style={{
                         margin: '10px 16px',
@@ -106,6 +93,19 @@ const Layout: React.FC = () => {
                 >
 
                     Content
+                    <ConfigProvider theme={{
+                        token: {
+                            // Seed Token，影响范围大
+                            colorPrimary: '#00b96b',
+                            borderRadius: 2,
+
+                            // 派生变量，影响范围小
+                            colorBgContainer: '#f6ffed',
+                        },
+                    }}>
+                        <Button type="primary">Primary Button</Button>
+                    </ConfigProvider>
+
                 </Content>
             </LayoutAntD>
         </LayoutAntD>

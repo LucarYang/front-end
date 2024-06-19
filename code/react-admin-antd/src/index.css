@@ -20,7 +20,12 @@ body {
   color: #fff;
   line-height: 20px;
   margin: 20px;
+
+  span {
+    font-size: 17px;
+  }
 }
+/* 
 .ant-menu-inline {
   background: #002c8c !important;
 }
@@ -32,4 +37,8 @@ body {
 }
 .aant-menu-title {
   color: #fff !important;
+} */
+[data-theme="dark"] .ant-btn-primary {
+  background-color: #002c8c;
+  border-color: #002c8c;
 }

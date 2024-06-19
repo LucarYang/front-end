@@ -48,10 +48,10 @@ const items: MenuItem[] = [
 const Mune: React.FC = () => {
     return (
         <div>
-            <Menu
+            <Menu style={{ "backgroundColor": '#002c8c', 'color': '#fff' }}
                 defaultSelectedKeys={['1']}
                 // defaultOpenKeys={['sub1']}
-                // theme="dark"
+                theme="dark"
                 mode="inline"
                 // inlineCollapsed={collapsed}
                 items={items}
