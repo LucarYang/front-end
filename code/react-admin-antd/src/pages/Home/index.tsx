@@ -1,4 +1,8 @@
+import { Card } from "antd"
+
 const Home = () => {
-    return <div>this is Home page</div>
+    return <>
+        <Card>this is Home page</Card>
+    </>
 }
 export default Home

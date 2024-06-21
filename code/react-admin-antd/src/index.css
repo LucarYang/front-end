@@ -42,3 +42,30 @@ body {
   background-color: #002c8c;
   border-color: #002c8c;
 }
+
+/* Login Page */
+
+.login-cover {
+  height: 440px;
+  width: 100%;
+  display: flex;
+  background: linear-gradient(rgba(12, 68, 189, 0.8), rgba(12, 68, 189, 0.8))
+      center center / cover no-repeat,
+    url("../src/assets/images/cover/cover_4.jpg");
+  background-size: auto;
+}
+
+/* 假设你希望选中的标签背景色为#1057E5 */
+.ant-tabs-nav .ant-tabs-tab-active {
+  background-color: #1057e5 !important; /* 使用!important以确保覆盖antd的默认样式 */
+  color: #fff !important;
+}
+
+/* 如果需要修改字体颜色，也可以同时设置 */
+.ant-tabs-nav .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: white; /* 假设你希望字体颜色为白色 */
+}
+
+.ant-tabs-top > .ant-tabs-nav {
+  margin: 0 !important;
+}

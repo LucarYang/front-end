@@ -1,4 +1,12 @@
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 const Err = () => {
-    return <div>this is Err page</div>
+    const errCode = 404
+    return <>
+        <div>
+            <ExclamationCircleOutlined />
+            Error:
+            {errCode === 404 ? '404' : '未知异常'}
+        </div>
+    </>
 }
 export default Err

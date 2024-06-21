@@ -1,7 +1,7 @@
 ul {
-  background: #002c8c !important;
+  background: #002c80;
   li {
-    color: #fff !important;
+    color: #fff;
     div {
       color: #fff !important;
     }
@@ -9,4 +9,7 @@ ul {
       background: #001d66 !important;
     }
   }
+}
+.ant-menu-title-content {
+  color: #fff;
 }
