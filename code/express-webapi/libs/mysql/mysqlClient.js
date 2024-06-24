@@ -39,4 +39,62 @@ process.on("exit", () => {
   pool.end();
 });
 
-module.exports = { CueMysql, mysqlClient };
+// 查询方法
+const query = (sql, params, callback) => {
+  pool.query(sql, params, (err, results) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, results);
+    }
+  });
+};
+
+// 封装增删改查方法
+
+// 增（Create）
+const create = (table, data, callback) => {
+  const keys = Object.keys(data);
+  const values = Object.values(data)
+    .map((value) => `?`)
+    .join(", ");
+  const sql = `INSERT INTO ${table} (${keys.join(", ")}) VALUES (${values})`;
+  query(sql, Object.values(data), callback);
+};
+
+// 查（Read）
+const read = (table, where = "", callback) => {
+  let sql = `SELECT * FROM ${table}`;
+  if (where) {
+    sql += ` WHERE ${where}`;
+  }
+  query(sql, [], callback);
+};
+
+// 更新单个记录（Update）
+const updateById = (table, id, data, callback) => {
+  const set = Object.keys(data)
+    .map((key) => `${key}=?`)
+    .join(", ");
+  const sql = `UPDATE ${table} SET ${set} WHERE id = ?`;
+  const params = [...Object.values(data), id];
+  query(sql, params, callback);
+};
+
+//
+// 删（Delete）
+//
+const deleteById = (table, id, callback) => {
+  const sql = `DELETE FROM ${table} WHERE id = ?`;
+  query(sql, [id], callback);
+};
+
+module.exports = {
+  CueMysql,
+  mysqlClient,
+  query,
+  create,
+  read,
+  updateById,
+  deleteById,
+};

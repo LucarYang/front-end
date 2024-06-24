@@ -12,3 +12,6 @@
 [2024-06-24T17:03:33.786] [DEBUG] default - GET /login
 [2024-06-24T17:03:34.411] [DEBUG] default - GET /login
 [2024-06-24T17:03:45.016] [DEBUG] default - GET /login
+[2024-06-24T22:08:33.692] [DEBUG] default - GET /
+[2024-06-24T22:08:38.351] [DEBUG] default - GET /login
+[2024-06-24T22:08:38.485] [DEBUG] default - GET /favicon.ico
