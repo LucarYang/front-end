@@ -7,6 +7,9 @@ var logger = require("morgan");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
+const loggerMiddleware = require("./libs/middleware/logger");
+const mysqlClient = require("./libs/mysql/mysqlClient");
+
 var app = express();
 
 // view engine setup
@@ -19,7 +22,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-console.log(indexRouter);
+app.use(loggerMiddleware);
+
+// console.log(indexRouter);
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
@@ -28,6 +33,7 @@ app.use(function (req, res, next) {
   next(createError(404));
 });
 
+mysqlClient.CueMysql(); //验证数据库是否连接成功
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
