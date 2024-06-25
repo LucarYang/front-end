@@ -10,7 +10,7 @@ const logger = log4js.getLogger("default");
 
 // 日志中间件
 const loggerMiddleware = (req, res, next) => {
-  console.log(req);
+  // console.log(req);
   logger.debug(`${req.method} ${req.url}`); // 记录请求方法和URL
   next();
 };

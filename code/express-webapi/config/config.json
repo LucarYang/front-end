@@ -27,5 +27,8 @@
         "level": "debug"
       }
     }
+  },
+  "jwt": {
+    "secret": "wuxude12$%^&*()asdsd"
   }
 }
