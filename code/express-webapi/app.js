@@ -3,14 +3,42 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+var session = require("express-session");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
-const loggerMiddleware = require("./libs/middleware/logger");
-const mysqlClient = require("./libs/mysql/mysqlClient");
+const loggerMiddleware = require("./libs/middleware/logger"); //日志中间件
+const mysqlClient = require("./libs/mysql/mysqlClient"); //MySQL链接
+const { sequelize } = require("./libs/sequelize_orm/index"); //sequelize - mssql的orm
 
 var app = express();
+
+// 配置session会话中间件
+app.use(
+  session({
+    secret: "wuxude12$%^&*()asdsd", // 设置你的session密钥
+    resave: false, // 强制session被存储，即使它并没有变化
+    saveUninitialized: true, // 强制一个未初始化的session被保存
+    // 其他配置项...
+  })
+);
+/** sequelize start*/
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("sequelize已成功建立连接.");
+  })
+  .catch((error) => {
+    console.error("sequelize建立连接失败:", error);
+  });
+
+// 当你的应用程序关闭时，确保关闭数据库连接。
+process.on("exit", () => {
+  sequelize.close();
+});
+``;
+/** sequelize end*/
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

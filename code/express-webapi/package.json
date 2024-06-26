@@ -21,9 +21,10 @@
     "log4js": "^6.9.1",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
-    "mysql2": "^3.10.1",
+    "mysql2": "^3.0.0",
     "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1"
+    "passport-jwt": "^4.0.1",
+    "sequelize": "^6.37.3"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
