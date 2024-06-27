@@ -1,11 +1,11 @@
 var express = require("express");
 const session = require("express-session");
 var router = express.Router();
-const { mysqlClient } = require("../libs/mysql/mysqlClient");
-const JWT = require("../libs/middleware/jwt/index");
+const { mysqlClient } = require("../utils/mysql/mysqlClient");
+const JWT = require("../utils/middleware/jwt/index");
 
-const checkTokenMiddleware = require("../libs/middleware/jwt/checkTokenMiddleware");
-const user = require("../src/controllers/user");
+const checkTokenMiddleware = require("..//utils/middleware/jwt/checkTokenMiddleware");
+const user = require("../controllers/user");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -43,7 +43,9 @@ router.post("/login", (req, res) => {
   );
 });
 
-// 登出
+/**
+ * 登出
+ */
 router.post("/logout", (req, res) => {
   try {
     // 销毁session
@@ -58,29 +60,7 @@ router.post("/logout", (req, res) => {
   }
 });
 
-const userModule = require("./../src/controllers/user");
-const User = require("../src/models/User");
-// 查询user
-router.get("/user/:id", checkTokenMiddleware, async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const userInfo = await userModule.getuserInfo(userId);
-    // userInfo不是object就是有数据异常
-    if (typeof userInfo === "object") {
-      res.status(200).json({ code: 0, msg: "sueccss", data: { ...userInfo } });
-    } else {
-      res.status(200).json({ code: -1, msg: userInfo, data: null });
-    }
-  } catch (error) {
-    res.status(500).json({
-      code: 500,
-      msg: "Internal Server Error",
-      error: error.toString(),
-    });
-  }
-});
-
-const authModule = require("./../src/controllers/Auth");
+const authModule = require("../controllers/Auth");
 // 菜单权限
 router.get("/menu/:id", checkTokenMiddleware, async (req, res) => {
   try {
@@ -98,22 +78,6 @@ router.get("/menu/:id", checkTokenMiddleware, async (req, res) => {
       error: error.toString(),
     });
   }
-
-  // mysqlClient.query("SELECT * FROM auth WHERE user = ?", [id], (err, data) => {
-  //   if (err) {
-  //     return res.status(500).json({ code: -1, msg: err }); // 发送500状态码和错误信息
-  //   }
-  //   if (data.length === 0) {
-  //     return res.status(404).json({ code: -1, msg: "账号或密码错误" }); // 如果没有找到用户，发送一个404状态码
-  //   }
-  //   res.status(200).json({
-  //     code: 0,
-  //     msg: "success",
-  //     data: {
-  //       ...JSON.parse(data[0].menu),
-  //     },
-  //   });
-  // });
 });
 
 // 添加新用户权限

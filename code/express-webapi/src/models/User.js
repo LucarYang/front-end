@@ -22,6 +22,7 @@ const User = sequelize.define(
     password: { type: DataTypes.STRING },
     lastlogin: { type: DataTypes.DATEONLY },
     updated_at: { type: DataTypes.DATEONLY },
+    is_used: { type: DataTypes.BOOLEAN },
   },
   {
     tableName: "user", // 指定表名为 'user'

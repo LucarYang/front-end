@@ -39,7 +39,7 @@ class JWT {
    */
   createToken(data) {
     // 有效期为1天1d 一小时1h 一分钟1m 一秒1*1000
-    let token = jsonwebtoken.sign(data, this.secret, { expiresIn: "1h" });
+    let token = jsonwebtoken.sign(data, this.secret, { expiresIn: "3h" });
     console.log(token);
     return token;
   }

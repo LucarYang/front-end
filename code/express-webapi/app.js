@@ -5,10 +5,10 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var session = require("express-session");
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var indexRouter = require("./src/routes/index");
+var usersRouter = require("./src/routes/users");
 
-const loggerMiddleware = require("./libs/middleware/logger"); //日志中间件
+const loggerMiddleware = require("./libs/log4/logger"); //日志中间件
 const mysqlClient = require("./libs/mysql/mysqlClient"); //MySQL链接
 const { sequelize } = require("./libs/sequelize_orm/index"); //sequelize - mssql的orm
 
@@ -54,7 +54,7 @@ app.use(loggerMiddleware);
 
 // console.log(indexRouter);
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/user", usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
